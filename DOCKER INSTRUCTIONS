@@ -1,0 +1,11 @@
+# Build the Docker image
+# (Run this in the jiraaa directory)
+docker build -t jiraaa-proxy .
+
+# Run the container, mapping port 3000 to your host
+# (Replace 0.0.0.0 with your server's IP if needed)
+docker run -d -p 3000:3000 --name jiraaa-proxy jiraaa-proxy
+
+# Now, others on your network can access the app at:
+#   http://<your-server-ip>:3000/jira-issue-viewer.html
+# Make sure your firewall allows inbound connections to port 3000.
