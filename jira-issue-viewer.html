@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,1413 +8,659 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        /* ===================================================================
+           CSS CUSTOM PROPERTIES â€” LIGHT & DARK THEME
+           =================================================================== */
+        :root {
+            --bg:             #f0f2f5;
+            --surface:        #ffffff;
+            --surface-2:      #f8f9fb;
+            --surface-3:      #f1f3f6;
+            --border:         #e2e8f0;
+            --border-light:   #eef2f7;
+            --text-primary:   #111827;
+            --text-secondary: #374151;
+            --text-muted:     #6b7280;
+            --text-faint:     #9ca3af;
+            --brand:          #a50034;
+            --brand-hover:    #880029;
+            --brand-bg:       rgba(165, 0, 52, 0.06);
+            --brand-bg-strong:rgba(165, 0, 52, 0.12);
+            --brand-gradient: linear-gradient(135deg, #a50034, #c8004a);
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-sm: 0 1px 4px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 42px rgba(0,0,0,0.13), 0 4px 12px rgba(0,0,0,0.07);
+            --r-sm: 6px; --r-md: 8px; --r-lg: 12px;
+            --t: 0.18s ease; --t-slow: 0.32s ease;
+            --topbar-bg: linear-gradient(135deg, #920030 0%, #b0003a 50%, #a50034 100%);
+            --s-open-bg:     #dbeafe; --s-open:     #1d4ed8;
+            --s-progress-bg: #fef3c7; --s-progress: #d97706;
+            --s-done-bg:     #d1fae5; --s-done:     #065f46;
+            --s-blocked-bg:  #fee2e2; --s-blocked:  #dc2626;
+            --s-default-bg:  #f3f4f6; --s-default:  #6b7280;
         }
+        [data-theme="dark"] {
+            --bg:             #0d1117;
+            --surface:        #161b22;
+            --surface-2:      #1c2333;
+            --surface-3:      #242c3d;
+            --border:         #30363d;
+            --border-light:   #21273a;
+            --text-primary:   #e6edf3;
+            --text-secondary: #c9d1d9;
+            --text-muted:     #8b949e;
+            --text-faint:     #4d5561;
+            --brand:          #ff6080;
+            --brand-hover:    #ff3d66;
+            --brand-bg:       rgba(255, 96, 128, 0.10);
+            --brand-bg-strong:rgba(255, 96, 128, 0.18);
+            --brand-gradient: linear-gradient(135deg, #c0002e, #e0003a);
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+            --shadow-sm: 0 1px 4px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4);
+            --shadow-lg: 0 12px 42px rgba(0,0,0,0.7), 0 4px 12px rgba(0,0,0,0.5);
+            --topbar-bg: linear-gradient(135deg, #6d0025 0%, #920030 100%);
+            --s-open-bg:     rgba(29,78,216,0.18);  --s-open:     #60a5fa;
+            --s-progress-bg: rgba(217,119,6,0.18);  --s-progress: #fbbf24;
+            --s-done-bg:     rgba(6,95,70,0.18);    --s-done:     #34d399;
+            --s-blocked-bg:  rgba(220,38,38,0.18);  --s-blocked:  #f87171;
+            --s-default-bg:  rgba(107,114,128,0.15);--s-default:  #9ca3af;
+        }
+
+        /* ===================================================================
+           BASE & SMOOTH THEME TRANSITIONS
+           =================================================================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f7f8fa;
+            background: var(--bg);
             min-height: 100vh;
-            color: #1a1a2e;
+            color: var(--text-primary);
             padding: 0;
             -webkit-font-smoothing: antialiased;
+            transition: background-color var(--t-slow), color var(--t-slow);
+        }
+        .login-section, .issue-card, .stats-bar, .stat-item, .nav-tabs, .nav-tab,
+        .tab-content, .filter-input, .form-group input, .form-group select,
+        .modal-content, .modal-header, .field-item, .analytics-card, .chart-section,
+        .timeline-content, .stat-card, .duration-bar, .selection-toolbar,
+        .btn-clear, .page-btn, .month-btn, .breakdown-table th, .breakdown-table td,
+        .status, .sprint-exclusion-banner, .json-view, .jql-input,
+        .bar-wrapper, .select-all-row, .trend-chart {
+            transition: background-color var(--t-slow), border-color var(--t-slow),
+                        color var(--t-slow), box-shadow var(--t-slow);
         }
 
-        /* LG Top Bar */
+        /* ===================================================================
+           LG TOP BAR
+           =================================================================== */
         .lg-topbar {
-            background: #a50034;
-            padding: 12px 28px;
+            background: var(--topbar-bg);
+            padding: 10px 28px;
             display: flex;
             align-items: center;
-            gap: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            gap: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.22);
             position: sticky;
             top: 0;
             z-index: 500;
         }
 
-        .lg-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .lg-logo { display: flex; align-items: center; gap: 10px; }
+        .lg-logo svg { height: 34px; width: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2)); }
+        .lg-topbar-title { color: #fff; font-size: 1.08rem; font-weight: 700; letter-spacing: 0.2px; }
+        .lg-topbar-subtitle { color: rgba(255,255,255,0.52); font-size: 0.74rem; font-weight: 400; margin-left: auto; }
+        .theme-toggle {
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 50%;
+            width: 34px; height: 34px;
+            cursor: pointer; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: background var(--t), transform var(--t), border-color var(--t);
+            flex-shrink: 0; line-height: 1;
         }
+        .theme-toggle:hover { background: rgba(255,255,255,0.24); border-color: rgba(255,255,255,0.4); transform: scale(1.1) rotate(18deg); }
 
-        .lg-logo svg {
-            height: 36px;
-            width: auto;
-        }
+        /* ===================================================================
+           CONTAINER
+           =================================================================== */
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px 24px; }
+        h1 { text-align: center; margin-bottom: 24px; color: var(--brand); font-size: 1.5rem; display: none; }
 
-        .lg-topbar-title {
-            color: #fff;
-            font-size: 1.15rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
-        .lg-topbar-subtitle {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.78rem;
-            font-weight: 400;
-            margin-left: auto;
-            letter-spacing: 0.2px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px 24px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 24px;
-            color: #a50034;
-            font-size: 1.5rem;
-            display: none;
-        }
-
-        /* Login Section */
+        /* ===================================================================
+           LOGIN / CONFIG SECTION
+           =================================================================== */
         .login-section {
-            background: #fff;
-            border-radius: 8px;
+            background: var(--surface);
+            border-radius: var(--r-md);
             padding: 20px 24px;
-            margin-bottom: 16px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            margin-bottom: 14px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
         }
-
+        /* Flush to tab edges inside regular-issues */
+        #regular-issues > .login-section {
+            border-radius: 0;
+            border-left: none; border-right: none; border-top: none;
+            margin-bottom: 0;
+            box-shadow: none;
+            border-bottom: 1px solid var(--border);
+        }
         .login-section h2 {
-            margin-bottom: 16px;
-            color: #1a1a2e;
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 0.2px;
+            margin-bottom: 14px;
+            color: var(--text-primary);
+            font-size: 0.92rem; font-weight: 700; letter-spacing: 0.2px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .login-section h2::before {
+            content: ''; width: 3px; height: 14px;
+            background: var(--brand-gradient);
+            border-radius: 2px; flex-shrink: 0;
         }
 
-        .form-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-        }
-
-        .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
+        /* ===================================================================
+           FORM
+           =================================================================== */
+        .form-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+        .form-group { flex: 1; min-width: 200px; }
         .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #666;
-            font-size: 0.9rem;
-            font-weight: 500;
+            display: block; margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 0.74rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-
         .form-group input, .form-group select {
-            width: 100%;
-            padding: 9px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            background: #fff;
-            color: #1a1a2e;
-            font-size: 0.9rem;
-            font-family: inherit;
-            transition: border-color 0.15s, box-shadow 0.15s;
+            width: 100%; padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+            background: var(--surface-2);
+            color: var(--text-primary);
+            font-size: 0.875rem; font-family: inherit;
         }
-
         .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #a50034;
-            box-shadow: 0 0 0 2px rgba(165, 0, 52, 0.08);
+            outline: none; border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-bg-strong);
+            background: var(--surface);
         }
+        .form-group input::placeholder { color: var(--text-faint); }
+        input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+        [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); }
 
-        /* Calendar icon - no invert on light bg */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: none;
-        }
-        input[type="date"]::-ms-input-placeholder { color: #999; }
-        input[type="date"]::placeholder { color: #999; }
-
+        /* ===================================================================
+           BUTTONS
+           =================================================================== */
         .btn {
-            padding: 9px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 500;
-            font-family: inherit;
-            transition: background 0.15s, box-shadow 0.15s;
+            padding: 9px 20px; border: none;
+            border-radius: var(--r-sm); cursor: pointer;
+            font-size: 0.875rem; font-weight: 600; font-family: inherit;
+            transition: all var(--t); white-space: nowrap;
+            display: inline-flex; align-items: center; gap: 6px;
         }
-
         .btn-primary {
-            background: #a50034;
+            background: var(--brand-gradient);
             color: #fff;
+            box-shadow: 0 2px 8px rgba(165, 0, 52, 0.28);
         }
+        .btn-primary:hover { filter: brightness(1.1); box-shadow: 0 4px 16px rgba(165, 0, 52, 0.4); transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); box-shadow: 0 1px 4px rgba(165, 0, 52, 0.25); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-cancel { background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); padding: 9px 18px; font-weight: 600; }
+        .btn-cancel:hover { background: var(--brand-bg); transform: translateY(-1px); }
 
-        .btn-primary:hover {
-            background: #8a002c;
-            box-shadow: 0 1px 4px rgba(165, 0, 52, 0.25);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-cancel {
-            background: #fff;
-            color: #a50034;
-            border: 1.5px solid #a50034;
-            padding: 9px 18px;
-            font-weight: 500;
-        }
-
-        .btn-cancel:hover {
-            background: #fdf2f4;
-        }
-
-        /* Status Messages */
+        /* ===================================================================
+           STATUS MESSAGES
+           =================================================================== */
         .status {
-            padding: 10px 14px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            display: none;
-            font-size: 0.875rem;
+            padding: 10px 14px; border-radius: var(--r-sm);
+            margin-bottom: 14px; display: none;
+            font-size: 0.875rem; align-items: center; gap: 8px;
         }
+        .status.error   { background: rgba(220,38,38,0.08);  border: 1px solid rgba(220,38,38,0.22);  color: #dc2626; display: flex; }
+        .status.success { background: rgba(5,150,105,0.08);  border: 1px solid rgba(5,150,105,0.22);  color: #059669; display: flex; }
+        .status.loading { background: rgba(234,179,8,0.08);  border: 1px solid rgba(234,179,8,0.22);  color: #d97706; display: flex; }
+        [data-theme="dark"] .status.error   { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); color: #f87171; }
+        [data-theme="dark"] .status.success { background: rgba(52,211,153,0.1);  border-color: rgba(52,211,153,0.25);  color: #34d399; }
+        [data-theme="dark"] .status.loading { background: rgba(251,191,36,0.1);  border-color: rgba(251,191,36,0.25);  color: #fbbf24; }
 
-        .status.error {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            display: block;
-        }
-
-        .status.success {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            display: block;
-        }
-
-        .status.loading {
-            background: #fffbeb;
-            border: 1px solid #fde68a;
-            color: #92400e;
-            display: block;
-        }
-
-        /* Issues Container */
-        .issues-container {
-            display: grid;
-            gap: 12px;
-        }
-
+        /* ===================================================================
+           ISSUE CARDS
+           =================================================================== */
+        .issues-container { display: grid; gap: 10px; }
         .issue-card {
-            background: #fff;
-            border-radius: 6px;
-            padding: 16px 20px;
-            border: 1px solid #e5e7eb;
-            transition: border-color 0.15s, box-shadow 0.15s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            background: var(--surface);
+            border-radius: var(--r-md);
+            padding: 16px 20px 16px 23px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-xs);
+            position: relative; overflow: hidden;
         }
-
-        .issue-card:hover {
-            border-color: #d1d5db;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        .issue-card::before {
+            content: ''; position: absolute;
+            left: 0; top: 0; bottom: 0; width: 3px;
+            background: var(--border);
+            transition: background var(--t);
         }
+        .issue-card:hover { border-color: var(--brand); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+        .issue-card:hover::before { background: var(--brand-gradient); }
+        .issue-card.selected { border-color: var(--brand); background: var(--brand-bg); }
+        .issue-card.selected::before { background: var(--brand-gradient); }
+        .issue-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+        .issue-key { font-size: 0.88rem; font-weight: 700; color: var(--brand); letter-spacing: 0.2px; }
+        .issue-key a { color: inherit; text-decoration: none; }
+        .issue-key a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
-        .issue-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .issue-key {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #a50034;
-        }
-
-        .issue-key a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .issue-key a:hover {
-            text-decoration: underline;
-        }
-
+        /* Status badges â€” pill with dot */
         .issue-status {
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.68rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; gap: 5px;
         }
-
-        .status-open, .status-todo { background: #e3f2fd; color: #1565c0; }
-        .status-inprogress, .status-in-progress { background: #fff3e0; color: #e65100; }
-        .status-done, .status-closed, .status-resolved { background: #e8f5e9; color: #2e7d32; }
-        .status-blocked { background: #fce4ec; color: #c62828; }
-        .status-default { background: #f5f5f5; color: #616161; }
-
-        .issue-summary {
-            font-size: 0.92rem;
-            margin-bottom: 14px;
-            color: #374151;
-            line-height: 1.5;
+        .issue-status::before {
+            content: ''; width: 5px; height: 5px;
+            border-radius: 50%; background: currentColor;
+            flex-shrink: 0; opacity: 0.8;
         }
+        .status-open, .status-todo             { background: var(--s-open-bg);     color: var(--s-open);     }
+        .status-inprogress, .status-in-progress{ background: var(--s-progress-bg); color: var(--s-progress); }
+        .status-done, .status-closed, .status-resolved { background: var(--s-done-bg); color: var(--s-done); }
+        .status-blocked                         { background: var(--s-blocked-bg);  color: var(--s-blocked);  }
+        .status-default                         { background: var(--s-default-bg);  color: var(--s-default);  }
 
-        .issue-fields {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-        }
+        .issue-summary { font-size: 0.9rem; margin-bottom: 14px; color: var(--text-secondary); line-height: 1.55; font-weight: 500; }
 
-        .field-item {
-            background: #f9fafb;
-            padding: 10px 12px;
-            border-radius: 5px;
-            border: 1px solid #f0f0f0;
-        }
+        .issue-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+        .field-item { background: var(--surface-2); padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--border-light); }
+        .field-label { font-size: 0.66rem; color: var(--text-faint); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
+        .field-value { color: var(--text-secondary); font-size: 0.83rem; word-break: break-word; }
+        .field-value.empty { color: var(--text-faint); font-style: italic; }
+        .field-item.full-width { grid-column: 1 / -1; }
+        .field-value.description { white-space: pre-wrap; max-height: 200px; overflow-y: auto; font-size: 0.875rem; line-height: 1.6; }
 
-        .field-label {
-            font-size: 0.7rem;
-            color: #9ca3af;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 500;
-        }
+        /* ===================================================================
+           TAGS
+           =================================================================== */
+        .tag-list { display: flex; flex-wrap: wrap; gap: 4px; }
+        .tag { background: var(--brand-bg); color: var(--brand); padding: 2px 8px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; border: 1px solid var(--brand-bg-strong); }
 
-        .field-value {
-            color: #374151;
-            font-size: 0.85rem;
-            word-break: break-word;
-        }
-
-        .field-value.empty {
-            color: #bbb;
-            font-style: italic;
-        }
-
-        /* Description field - full width */
-        .field-item.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .field-value.description {
-            white-space: pre-wrap;
-            max-height: 200px;
-            overflow-y: auto;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* Labels and Components */
-        .tag-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .tag {
-            background: #fef2f4;
-            color: #a50034;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 0.78rem;
-            font-weight: 500;
-        }
-
-        /* Summary Stats */
+        /* ===================================================================
+           STATS BAR
+           =================================================================== */
         .stats-bar {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-            padding: 14px 20px;
-            background: #fff;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            display: flex; gap: 8px; flex-wrap: wrap;
+            margin-bottom: 14px; padding: 12px 16px;
+            background: var(--surface); border-radius: var(--r-md);
+            border: 1px solid var(--border); box-shadow: var(--shadow-xs);
         }
-
         .stat-item {
-            text-align: center;
+            flex: 1; min-width: 80px; text-align: center;
+            padding: 8px 12px; border-radius: var(--r-sm);
+            background: var(--surface-2); border: 1px solid var(--border-light);
         }
+        .stat-value { font-size: 1.55rem; font-weight: 800; color: var(--brand); line-height: 1; margin-bottom: 4px; letter-spacing: -0.5px; }
+        .stat-label { font-size: 0.67rem; color: var(--text-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
 
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #a50034;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: #9ca3af;
-            font-weight: 500;
-        }
-
-        /* Filters */
-        .filters {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-
+        /* ===================================================================
+           FILTERS
+           =================================================================== */
+        .filters { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
         .filter-input {
-            flex: 1;
-            min-width: 250px;
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            background: #fff;
-            color: #1a1a2e;
-            font-size: 0.875rem;
-            font-family: inherit;
+            flex: 1; min-width: 250px; padding: 8px 12px;
+            border: 1.5px solid var(--border); border-radius: var(--r-sm);
+            background: var(--surface); color: var(--text-primary);
+            font-size: 0.875rem; font-family: inherit;
         }
+        .filter-input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-bg-strong); }
+        .filter-input::placeholder { color: var(--text-faint); }
 
-        .filter-input:focus {
-            outline: none;
-            border-color: #a50034;
-            box-shadow: 0 0 0 2px rgba(165, 0, 52, 0.08);
-        }
-
-        /* Month Filter */
-        .month-filter-bar {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .month-filter-bar .month-label {
-            font-size: 0.78rem;
-            color: #6b7280;
-            font-weight: 600;
-            margin-right: 4px;
-        }
-
+        /* ===================================================================
+           FILTER PILLS (month / status / team / member)
+           =================================================================== */
+        .month-filter-bar { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+        .month-filter-bar .month-label { font-size: 0.7rem; color: var(--text-faint); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
         .month-btn {
-            padding: 4px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            background: #fff;
-            color: #6b7280;
-            cursor: pointer;
-            font-size: 0.78rem;
-            font-weight: 500;
-            font-family: inherit;
-            transition: all 0.12s;
+            padding: 4px 12px; border: 1.5px solid var(--border);
+            border-radius: 20px; background: var(--surface); color: var(--text-muted);
+            cursor: pointer; font-size: 0.74rem; font-weight: 500; font-family: inherit;
+            transition: all var(--t);
         }
+        .month-btn:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-bg); }
+        .month-btn.active { background: var(--brand-gradient); color: #fff; border-color: transparent; font-weight: 600; box-shadow: 0 2px 8px rgba(165,0,52,0.25); }
+        [data-theme="dark"] .month-btn.active { box-shadow: 0 2px 8px rgba(255,96,128,0.25); }
+        .month-btn.all-btn { font-weight: 600; }
 
-        .month-btn:hover {
-            border-color: #a50034;
-            color: #a50034;
-            background: #fef2f4;
-        }
-
-        .month-btn.active {
-            background: #A50034;
-            color: #fff;
-            border-color: #A50034;
-        }
-
-        .month-btn.all-btn {
-            font-weight: 600;
-        }
-
-        /* Custom JQL */
-        .jql-section {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #f3f4f6;
-        }
-
+        /* ===================================================================
+           JQL INPUT
+           =================================================================== */
+        .jql-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-light); }
         .jql-input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 5px;
-            background: #f9fafb;
-            color: #374151;
-            font-size: 0.82rem;
-            font-family: 'SF Mono', 'Fira Code', monospace;
+            width: 100%; padding: 8px 12px;
+            border: 1.5px solid var(--border); border-radius: var(--r-sm);
+            background: var(--surface-2); color: var(--text-secondary);
+            font-size: 0.82rem; font-family: 'SF Mono', 'Fira Code', monospace;
         }
+        .jql-input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-bg-strong); }
 
-        .jql-input:focus {
-            outline: none;
-            border-color: #a50034;
-            box-shadow: 0 0 0 2px rgba(165, 0, 52, 0.08);
-        }
-
-        /* Responsive */
+        /* ===================================================================
+           RESPONSIVE
+           =================================================================== */
         @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-            }
-            
-            .issue-fields {
-                grid-template-columns: 1fr;
-            }
-
-            .lg-topbar {
-                flex-wrap: wrap;
-            }
+            .form-row { flex-direction: column; }
+            .issue-fields { grid-template-columns: 1fr; }
+            .lg-topbar { flex-wrap: wrap; }
+            .container { padding: 14px 16px; }
         }
 
-        /* Loading spinner */
+        /* ===================================================================
+           SPINNER
+           =================================================================== */
         .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(165, 0, 52, 0.2);
-            border-radius: 50%;
-            border-top-color: #a50034;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
+            display: inline-block; width: 16px; height: 16px;
+            border: 2.5px solid var(--brand-bg-strong);
+            border-radius: 50%; border-top-color: var(--brand);
+            animation: spin 0.75s linear infinite;
+            margin-right: 8px; vertical-align: middle; flex-shrink: 0;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Expand/Collapse */
+        /* ===================================================================
+           EXPAND / COLLAPSE
+           =================================================================== */
         .expand-btn {
-            background: #f9fafb;
-            border: 1px solid #d1d5db;
-            color: #6b7280;
-            padding: 4px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.78rem;
-            font-family: inherit;
-            margin-top: 8px;
+            background: var(--surface-2); border: 1px solid var(--border);
+            color: var(--text-muted); padding: 4px 12px;
+            border-radius: 20px; cursor: pointer;
+            font-size: 0.74rem; font-family: inherit; margin-top: 8px;
+            transition: all var(--t);
         }
+        .expand-btn:hover { background: var(--brand-bg); border-color: var(--brand); color: var(--brand); }
+        .all-fields { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-light); }
+        .all-fields.expanded { display: block; }
 
-        .expand-btn:hover {
-            background: #fef2f4;
-            border-color: #a50034;
-            color: #a50034;
-        }
-
-        .all-fields {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .all-fields.expanded {
-            display: block;
-        }
-
-        /* Raw JSON view */
+        /* ===================================================================
+           JSON VIEW
+           =================================================================== */
         .json-view {
-            background: #f9fafb;
-            padding: 12px;
-            border-radius: 5px;
-            overflow-x: auto;
+            background: var(--surface-2); padding: 12px;
+            border-radius: var(--r-sm); overflow-x: auto;
             font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.78rem;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
+            font-size: 0.75rem; max-height: 400px; overflow-y: auto;
+            border: 1px solid var(--border); color: var(--text-secondary);
         }
 
-        /* Issue Selection */
+        /* ===================================================================
+           SELECTION TOOLBAR
+           =================================================================== */
         .selection-toolbar {
-            display: none;
-            background: #fef7f8;
-            border: 1px solid #fce8ec;
-            border-radius: 6px;
-            padding: 10px 16px;
-            margin-bottom: 14px;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
+            display: none; background: var(--brand-bg);
+            border: 1px solid var(--brand-bg-strong);
+            border-radius: var(--r-md); padding: 10px 16px;
+            margin-bottom: 12px; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 10px;
         }
-
-        .selection-toolbar.visible {
-            display: flex;
-        }
-
-        .selection-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .selection-count {
-            font-size: 0.875rem;
-            color: #a50034;
-            font-weight: 600;
-        }
-
-        .selection-actions {
-            display: flex;
-            gap: 8px;
-        }
-
+        .selection-toolbar.visible { display: flex; }
+        .selection-info { display: flex; align-items: center; gap: 10px; }
+        .selection-count { font-size: 0.875rem; color: var(--brand); font-weight: 700; }
+        .selection-actions { display: flex; gap: 8px; }
         .btn-analyze {
-            background: #a50034;
-            color: #fff;
-            padding: 7px 18px;
-            border: none;
-            border-radius: 5px;
-            font-weight: 500;
-            cursor: pointer;
-            font-size: 0.82rem;
-            font-family: inherit;
-            transition: background 0.15s;
+            background: var(--brand-gradient); color: #fff;
+            padding: 7px 16px; border: none; border-radius: var(--r-sm);
+            font-weight: 600; cursor: pointer; font-size: 0.82rem; font-family: inherit;
+            transition: all var(--t); box-shadow: 0 2px 6px rgba(165,0,52,0.25);
         }
-
-        .btn-analyze:hover {
-            background: #8a002c;
-        }
-
+        .btn-analyze:hover { filter: brightness(1.1); box-shadow: 0 4px 12px rgba(165,0,52,0.35); transform: translateY(-1px); }
         .btn-clear {
-            background: #fff;
-            color: #6b7280;
-            padding: 7px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.82rem;
-            font-family: inherit;
-            transition: all 0.12s;
+            background: var(--surface); color: var(--text-muted);
+            padding: 7px 14px; border: 1.5px solid var(--border);
+            border-radius: var(--r-sm); cursor: pointer;
+            font-size: 0.82rem; font-family: inherit; font-weight: 500; transition: all var(--t);
         }
+        .btn-clear:hover { background: var(--brand-bg); border-color: var(--brand); color: var(--brand); }
 
-        .btn-clear:hover {
-            background: #f9fafb;
-            border-color: #a50034;
-            color: #a50034;
-        }
+        .issue-checkbox { position: absolute; top: 12px; right: 12px; width: 16px; height: 16px; cursor: pointer; z-index: 10; accent-color: var(--brand); }
+        .select-all-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding: 8px 12px; background: var(--surface-2); border-radius: var(--r-sm); border: 1px solid var(--border-light); }
+        .select-all-row label { color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.82rem; }
 
-        .issue-checkbox {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            z-index: 10;
-            accent-color: #a50034;
-        }
+        /* ===================================================================
+           ANALYTICS DASHBOARD
+           =================================================================== */
+        .analytics-dashboard { padding: 20px; }
+        .analytics-header { text-align: center; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--border-light); }
+        .analytics-header h2 { color: var(--text-primary); font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
+        .analytics-header p { color: var(--text-faint); font-size: 0.84rem; }
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .analytics-card { background: var(--surface-2); border: 1px solid var(--border-light); border-radius: var(--r-md); padding: 16px; text-align: center; }
+        .analytics-card .icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .analytics-card .value { font-size: 1.75rem; font-weight: 800; color: var(--brand); margin-bottom: 2px; letter-spacing: -0.5px; }
+        .analytics-card .label { color: var(--text-faint); font-size: 0.75rem; font-weight: 500; }
+        .analytics-card .sub-value { color: var(--text-faint); font-size: 0.72rem; margin-top: 4px; }
 
-        .issue-card {
-            position: relative;
-        }
-
-        .issue-card.selected {
-            border-color: #a50034;
-            background: #fef7f8;
-        }
-
-        .select-all-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            padding: 8px 12px;
-            background: #f9fafb;
-            border-radius: 5px;
-        }
-
-        .select-all-row label {
-            color: #6b7280;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-        }
-
-        /* Analytics Dashboard */
-        .analytics-dashboard {
-            padding: 20px;
-        }
-
-        .analytics-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .analytics-header h2 {
-            color: #1a1a2e;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .analytics-header p {
-            color: #9ca3af;
-            font-size: 0.85rem;
-        }
-
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .analytics-card {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .analytics-card .icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-
-        .analytics-card .value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #a50034;
-            margin-bottom: 2px;
-        }
-
-        .analytics-card .label {
-            color: #6b7280;
-            font-size: 0.78rem;
-        }
-
-        .analytics-card .sub-value {
-            color: #9ca3af;
-            font-size: 0.75rem;
-            margin-top: 4px;
-        }
-
-        /* Chart Container */
-        .chart-section {
-            background: #fff;
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid #e5e7eb;
-        }
-
-        .chart-section h3 {
-            color: #1a1a2e;
-            font-size: 0.92rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .bar-chart {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .bar-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .bar-label {
-            width: 120px;
-            color: #6b7280;
-            font-size: 0.78rem;
-            text-align: right;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .bar-wrapper {
-            flex: 1;
-            height: 24px;
-            background: #f3f4f6;
-            border-radius: 3px;
-            overflow: hidden;
-            position: relative;
-        }
-
+        /* ===================================================================
+           CHART SECTION
+           =================================================================== */
+        .chart-section { background: var(--surface); border-radius: var(--r-md); padding: 18px 20px; margin-bottom: 14px; border: 1px solid var(--border); }
+        .chart-section h3 { color: var(--text-primary); font-size: 0.84rem; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .bar-chart { display: flex; flex-direction: column; gap: 10px; }
+        .bar-row { display: flex; align-items: center; gap: 12px; }
+        .bar-label { width: 120px; color: var(--text-muted); font-size: 0.75rem; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bar-wrapper { flex: 1; height: 22px; background: var(--surface-3); border-radius: 20px; overflow: hidden; position: relative; }
         .bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: #fff;
-            transition: width 0.5s ease;
-            min-width: fit-content;
+            height: 100%; border-radius: 20px;
+            display: flex; align-items: center; padding: 0 10px;
+            font-size: 0.7rem; font-weight: 700; color: #fff;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); min-width: fit-content;
         }
+        .bar-fill.holding    { background: var(--brand-gradient); }
+        .bar-fill.resolution { background: linear-gradient(90deg, #059669, #10b981); }
+        .bar-fill.waiting    { background: linear-gradient(90deg, #d97706, #f59e0b); }
+        .bar-value { width: 70px; text-align: right; color: var(--text-secondary); font-weight: 700; font-size: 0.78rem; }
 
-        .bar-fill.holding { background: #a50034; }
-        .bar-fill.resolution { background: #059669; }
-        .bar-fill.waiting { background: #d97706; }
+        /* Pie */
+        .pie-chart-container { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+        .pie-chart { width: 200px; height: 200px; border-radius: 50%; position: relative; }
+        .pie-legend { display: flex; flex-direction: column; gap: 10px; }
+        .pie-legend-item { display: flex; align-items: center; gap: 10px; }
+        .pie-legend-color { width: 14px; height: 14px; border-radius: 4px; }
+        .pie-legend-text { color: var(--text-muted); font-size: 0.875rem; }
+        .pie-legend-value { color: var(--brand); font-weight: 700; margin-left: auto; }
 
-        .bar-value {
-            width: 70px;
-            text-align: right;
-            color: #374151;
-            font-weight: 600;
-            font-size: 0.78rem;
-        }
+        /* ===================================================================
+           BREAKDOWN TABLE
+           =================================================================== */
+        .breakdown-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.82rem; }
+        .breakdown-table th, .breakdown-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border-light); }
+        .breakdown-table th { background: var(--surface-2); color: var(--text-faint); font-weight: 700; font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; z-index: 1; }
+        .breakdown-table td { color: var(--text-secondary); }
+        .breakdown-table tr:hover td { background: var(--brand-bg); }
+        .mini-bar { width: 80px; height: 5px; background: var(--surface-3); border-radius: 20px; overflow: hidden; display: inline-block; vertical-align: middle; margin-left: 8px; }
+        .mini-bar-fill { height: 100%; background: var(--brand-gradient); border-radius: 20px; }
 
-        /* Pie Chart (CSS only) */
-        .pie-chart-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .pie-chart {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .pie-legend {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .pie-legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .pie-legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-        }
-
-        .pie-legend-text {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .pie-legend-value {
-            color: #a50034;
-            font-weight: 600;
-            margin-left: auto;
-        }
-
-        /* Issue Breakdown Table */
-        .breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
-            font-size: 0.82rem;
-        }
-
-        .breakdown-table th,
-        .breakdown-table td {
-            padding: 8px 12px;
-            text-align: left;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .breakdown-table th {
-            background: #f9fafb;
-            color: #6b7280;
-            font-weight: 600;
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .breakdown-table td {
-            color: #374151;
-        }
-
-        .breakdown-table tr:hover td {
-            background: #fef7f8;
-        }
-
-        .mini-bar {
-            width: 80px;
-            height: 6px;
-            background: #f3f4f6;
-            border-radius: 3px;
-            overflow: hidden;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 8px;
-        }
-
-        .mini-bar-fill {
-            height: 100%;
-            background: #a50034;
-            border-radius: 3px;
-        }
-
-        /* Issue Detail Modal */
+        /* ===================================================================
+           MODALS
+           =================================================================== */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 1000;
-            overflow-y: auto;
-            padding: 20px;
-            backdrop-filter: blur(2px);
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000; overflow-y: auto; padding: 20px;
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
         }
-
-        .modal-overlay.active {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
+        .modal-overlay.active { display: flex; justify-content: center; align-items: flex-start; animation: fadeInBackdrop 0.2s ease; }
+        @keyframes fadeInBackdrop { from { opacity: 0; } to { opacity: 1; } }
         .modal-content {
-            background: #fff;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 900px;
-            margin: 20px auto;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            background: var(--surface);
+            border-radius: var(--r-lg); width: 100%; max-width: 900px;
+            margin: 20px auto; border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            animation: slideUpModal 0.25s cubic-bezier(0.34, 1.3, 0.64, 1);
         }
-
+        @keyframes slideUpModal { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 20px;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
-            border-radius: 8px 8px 0 0;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 20px; border-bottom: 1px solid var(--border);
+            background: var(--surface-2); border-radius: var(--r-lg) var(--r-lg) 0 0;
         }
-
-        .modal-header h2 {
-            color: #1a1a2e;
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
+        .modal-header h2 { color: var(--text-primary); font-size: 0.95rem; font-weight: 700; margin: 0; }
         .modal-close {
-            background: none;
-            border: none;
-            color: #9ca3af;
-            font-size: 1.5rem;
-            cursor: pointer;
-            line-height: 1;
-            padding: 4px;
+            background: var(--surface-3); border: 1px solid var(--border);
+            color: var(--text-muted); font-size: 1rem; cursor: pointer;
+            border-radius: var(--r-sm); transition: all var(--t);
+            display: flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; flex-shrink: 0; line-height: 1;
         }
+        .modal-close:hover { background: var(--brand-bg); border-color: var(--brand); color: var(--brand); }
+        .modal-body { padding: 20px; }
 
-        .modal-close:hover {
-            color: #a50034;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        /* Timeline Styles */
-        .timeline-section {
-            margin-bottom: 24px;
-        }
-
-        .timeline-section h3 {
-            color: #1a1a2e;
-            margin-bottom: 16px;
-            font-size: 0.92rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 28px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 8px;
-            top: 0;
-            bottom: 0;
-            width: 1.5px;
-            background: #e5e7eb;
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-bottom: 20px;
-        }
-
-        .timeline-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: -24px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #a50034;
-            border: 2px solid #fff;
-            box-shadow: 0 0 0 1px #e5e7eb;
-        }
-
-        .timeline-dot.created { background: #059669; }
+        /* ===================================================================
+           TIMELINE
+           =================================================================== */
+        .timeline-section { margin-bottom: 24px; }
+        .timeline-section h3 { color: var(--text-primary); margin-bottom: 14px; font-size: 0.84rem; font-weight: 700; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.4px; }
+        .timeline { position: relative; padding-left: 28px; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 1.5px; background: var(--border); }
+        .timeline-item { position: relative; padding-bottom: 18px; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-dot { position: absolute; left: -24px; width: 13px; height: 13px; border-radius: 50%; background: var(--brand); border: 2px solid var(--surface); box-shadow: 0 0 0 1.5px var(--border); }
+        .timeline-dot.created  { background: #059669; }
         .timeline-dot.assigned { background: #2563eb; }
-        .timeline-dot.status { background: #d97706; }
+        .timeline-dot.status   { background: #d97706; }
         .timeline-dot.resolved { background: #7c3aed; }
-        .timeline-dot.closed { background: #dc2626; }
+        .timeline-dot.closed   { background: #dc2626; }
+        .timeline-content { background: var(--surface-2); border-radius: var(--r-sm); padding: 10px 14px; margin-left: 8px; border: 1px solid var(--border-light); }
+        .timeline-date { font-size: 0.71rem; color: var(--text-faint); margin-bottom: 3px; }
+        .timeline-title { font-weight: 700; color: var(--text-primary); margin-bottom: 3px; font-size: 0.84rem; }
+        .timeline-detail { font-size: 0.8rem; color: var(--text-muted); }
+        .timeline-detail .from-to { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .timeline-detail .arrow { color: var(--brand); font-weight: 700; }
 
-        .timeline-content {
-            background: #f9fafb;
-            border-radius: 5px;
-            padding: 10px 14px;
-            margin-left: 8px;
-            border: 1px solid #f3f4f6;
-        }
+        /* ===================================================================
+           STAT CARDS (modal)
+           =================================================================== */
+        .issue-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--surface-2); border-radius: var(--r-md); padding: 12px; text-align: center; border: 1px solid var(--border-light); }
+        .stat-card .stat-icon { font-size: 1.3rem; margin-bottom: 6px; }
+        .stat-card .stat-value { font-size: 1.05rem; font-weight: 800; color: var(--brand); letter-spacing: -0.3px; }
+        .stat-card .stat-label { font-size: 0.7rem; color: var(--text-faint); margin-top: 3px; font-weight: 500; }
 
-        .timeline-date {
-            font-size: 0.75rem;
-            color: #9ca3af;
-            margin-bottom: 3px;
-        }
-
-        .timeline-title {
-            font-weight: 600;
-            color: #1a1a2e;
-            margin-bottom: 3px;
-            font-size: 0.85rem;
-        }
-
-        .timeline-detail {
-            font-size: 0.82rem;
-            color: #6b7280;
-        }
-
-        .timeline-detail .from-to {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .timeline-detail .arrow {
-            color: #a50034;
-        }
-
-        /* Stats Cards in Modal */
-        .issue-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: #f9fafb;
-            border-radius: 6px;
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #f3f4f6;
-        }
-
-        .stat-card .stat-icon {
-            font-size: 1.25rem;
-            margin-bottom: 6px;
-        }
-
-        .stat-card .stat-value {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #a50034;
-        }
-
-        .stat-card .stat-label {
-            font-size: 0.72rem;
-            color: #9ca3af;
-            margin-top: 3px;
-        }
-
-        /* Duration bar */
-        .duration-bar {
-            margin: 16px 0;
-            padding: 14px;
-            background: #f9fafb;
-            border-radius: 6px;
-            border: 1px solid #f3f4f6;
-        }
-
-        .duration-bar h4 {
-            color: #1a1a2e;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .bar-container {
-            height: 24px;
-            background: #e5e7eb;
-            border-radius: 3px;
-            overflow: hidden;
-            display: flex;
-        }
-
-        .bar-segment {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.68rem;
-            color: #fff;
-            font-weight: 600;
-            min-width: 30px;
-        }
-
+        /* ===================================================================
+           DURATION BAR
+           =================================================================== */
+        .duration-bar { margin: 14px 0; padding: 14px; background: var(--surface-2); border-radius: var(--r-md); border: 1px solid var(--border-light); }
+        .duration-bar h4 { color: var(--text-primary); margin-bottom: 10px; font-size: 0.82rem; font-weight: 700; }
+        .bar-container { height: 22px; background: var(--surface-3); border-radius: 20px; overflow: hidden; display: flex; }
+        .bar-segment { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #fff; font-weight: 700; min-width: 30px; }
         .bar-segment.open { background: #2196f3; }
         .bar-segment.in-progress { background: #ff9800; }
         .bar-segment.resolved { background: #9c27b0; }
         .bar-segment.closed { background: #4caf50; }
+        .bar-legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: var(--text-muted); }
+        .legend-color { width: 10px; height: 10px; border-radius: 3px; }
 
-        .bar-legend {
-            display: flex;
-            gap: 20px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
+        .clickable-card { cursor: pointer; }
+        .clickable-card:hover .issue-key a { text-decoration: underline; }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.85rem;
-            color: #777;
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-        }
-
-        .clickable-card {
-            cursor: pointer;
-        }
-
-        .clickable-card:hover .issue-key a {
-            text-decoration: underline;
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            margin-top: 16px;
-            padding: 12px 0;
-            flex-wrap: wrap;
-        }
-
+        /* ===================================================================
+           PAGINATION
+           =================================================================== */
+        .pagination { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 16px; padding: 12px 0; flex-wrap: wrap; }
         .page-btn {
-            background: #fff;
-            color: #374151;
-            border: 1px solid #d1d5db;
-            padding: 5px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.78rem;
-            font-family: inherit;
-            transition: all 0.12s;
+            background: var(--surface); color: var(--text-secondary);
+            border: 1.5px solid var(--border); padding: 5px 11px;
+            border-radius: var(--r-sm); cursor: pointer;
+            font-size: 0.78rem; font-family: inherit; font-weight: 500; transition: all var(--t);
         }
+        .page-btn:hover:not(:disabled):not(.active) { background: var(--brand-bg); border-color: var(--brand); color: var(--brand); }
+        .page-btn.active { background: var(--brand-gradient); color: #fff; border-color: transparent; font-weight: 700; box-shadow: 0 2px 6px rgba(165,0,52,0.25); }
+        .page-btn:disabled { opacity: 0.3; cursor: default; }
+        .page-dots { padding: 0 3px; color: var(--text-faint); font-size: 0.78rem; }
+        .page-info { font-size: 0.72rem; color: var(--text-faint); margin-left: 6px; }
 
-        .page-btn:hover:not(:disabled):not(.active) {
-            background: #f9fafb;
-            border-color: #a50034;
-            color: #a50034;
-        }
+        /* ===================================================================
+           MTTR TREND CHART
+           =================================================================== */
+        .trend-chart { display: flex; align-items: flex-end; gap: 0; height: 220px; padding: 20px 0 0 0; border-bottom: 1.5px solid var(--border); position: relative; }
+        .trend-chart-wrapper { position: relative; }
+        .trend-y-axis { position: absolute; left: 0; top: 0; bottom: 28px; width: 40px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; padding-right: 8px; }
+        .trend-y-label { font-size: 0.62rem; color: var(--text-faint); line-height: 1; }
+        .trend-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; min-width: 48px; position: relative; }
+        .trend-bar-container { display: flex; align-items: flex-end; height: 180px; width: 100%; justify-content: center; }
+        .trend-bar { width: 30px; border-radius: 4px 4px 0 0; transition: height 0.5s cubic-bezier(0.4,0,0.2,1); position: relative; cursor: default; }
+        .trend-bar.up      { background: linear-gradient(180deg, #fca5a5, #ef4444); }
+        .trend-bar.down    { background: linear-gradient(180deg, #6ee7b7, #059669); }
+        .trend-bar.neutral { background: var(--brand-gradient); }
+        .trend-bar-value { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); white-space: nowrap; }
+        .trend-bar-label { font-size: 0.65rem; color: var(--text-muted); margin-top: 6px; text-align: center; white-space: nowrap; }
+        .trend-bar-count { font-size: 0.58rem; color: var(--text-faint); }
+        .trend-legend { display: flex; gap: 14px; margin-top: 12px; justify-content: center; }
+        .trend-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--text-muted); }
+        .trend-legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+        .trend-line { position: absolute; top: 20px; left: 0; right: 0; bottom: 0; pointer-events: none; }
 
-        .page-btn.active {
-            background: #a50034;
-            color: #fff;
-            border-color: #a50034;
-            font-weight: 600;
-        }
-
-        .page-btn:disabled {
-            opacity: 0.35;
-            cursor: default;
-        }
-
-        .page-dots {
-            padding: 0 3px;
-            color: #9ca3af;
-            font-size: 0.78rem;
-        }
-
-        .page-info {
-            margin-left: 10px;
-            font-size: 0.75rem;
-            color: #9ca3af;
-        }
-
-        /* MTTR Trend Chart */
-        .trend-chart {
-            display: flex;
-            align-items: flex-end;
-            gap: 0;
-            height: 220px;
-            padding: 20px 0 0 0;
-            border-bottom: 1.5px solid #e5e7eb;
-            position: relative;
-        }
-
-        .trend-chart-wrapper {
-            position: relative;
-        }
-
-        .trend-y-axis {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 28px;
-            width: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding-right: 8px;
-        }
-
-        .trend-y-label {
-            font-size: 0.65rem;
-            color: #9ca3af;
-            line-height: 1;
-        }
-
-        .trend-bar-group {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
-            min-width: 48px;
-            position: relative;
-        }
-
-        .trend-bar-container {
-            display: flex;
-            align-items: flex-end;
-            height: 180px;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .trend-bar {
-            width: 32px;
-            border-radius: 3px 3px 0 0;
-            transition: height 0.4s ease;
-            position: relative;
-            cursor: default;
-        }
-
-        .trend-bar.up {
-            background: #ef4444;
-        }
-
-        .trend-bar.down {
-            background: #059669;
-        }
-
-        .trend-bar.neutral {
-            background: #a50034;
-        }
-
-        .trend-bar-value {
-            position: absolute;
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.68rem;
-            font-weight: 600;
-            color: #374151;
-            white-space: nowrap;
-        }
-
-        .trend-bar-label {
-            font-size: 0.68rem;
-            color: #6b7280;
-            margin-top: 6px;
-            text-align: center;
-            white-space: nowrap;
-        }
-
-        .trend-bar-count {
-            font-size: 0.6rem;
-            color: #9ca3af;
-        }
-
-        .trend-legend {
-            display: flex;
-            gap: 16px;
-            margin-top: 14px;
-            justify-content: center;
-        }
-
-        .trend-legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.72rem;
-            color: #6b7280;
-        }
-
-        .trend-legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-        }
-
-        .trend-line {
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-        }
-
-        /* Navigation Tabs */
+        /* ===================================================================
+           NAVIGATION TABS
+           =================================================================== */
         .nav-tabs {
-            display: flex;
-            background: #fff;
-            border-radius: 8px 8px 0 0;
-            border: 1px solid #e5e7eb;
-            border-bottom: none;
-            margin-bottom: 0;
-            overflow-x: auto;
+            display: flex; background: var(--surface);
+            border-radius: var(--r-md) var(--r-md) 0 0;
+            border: 1px solid var(--border); border-bottom: none;
+            margin-bottom: 0; overflow-x: auto;
         }
-
         .nav-tab {
-            background: transparent;
-            border: none;
-            padding: 12px 20px;
-            font-family: inherit;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #6b7280;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            border-bottom: 2px solid transparent;
+            background: transparent; border: none;
+            padding: 12px 22px; font-family: inherit;
+            font-size: 0.875rem; font-weight: 500; color: var(--text-muted);
+            cursor: pointer; transition: all var(--t);
+            white-space: nowrap; border-bottom: 2px solid transparent;
         }
+        .nav-tab:hover { color: var(--brand); background: var(--brand-bg); }
+        .nav-tab.active { color: var(--brand); background: var(--brand-bg); border-bottom-color: var(--brand); font-weight: 600; }
+        .tab-content { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 var(--r-md) var(--r-md); min-height: 200px; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
 
-        .nav-tab:hover {
-            color: #a50034;
-            background: #fef2f4;
-        }
+        /* ===================================================================
+           TAB INNER PADDING WRAPPER
+           =================================================================== */
+        .tab-inner-pad { padding: 16px 20px 24px 20px; }
 
-        .nav-tab.active {
-            color: #a50034;
-            background: #fef2f4;
-            border-bottom-color: #a50034;
+        /* ===================================================================
+           SPRINT STYLES
+           =================================================================== */
+        /* Sprint config reuses .login-section but must be flush — kill shadow/radius */
+        .sprint-config-section.login-section {
+            box-shadow: none !important;
+            border-radius: 0 !important;
         }
+        .sprint-config-section { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+        .sprint-config-section h2 { margin-bottom: 14px; color: var(--text-primary); font-size: 0.92rem; font-weight: 600; }
+        .sprint-exclusion-banner {
+            display: none; background: rgba(217,119,6,0.08);
+            border: 1px solid rgba(217,119,6,0.22); border-radius: var(--r-sm);
+            padding: 10px 14px; margin-bottom: 10px; font-size: 0.82rem;
+            color: #d97706; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+        [data-theme="dark"] .sprint-exclusion-banner { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.2); color: #fbbf24; }
+        .sprint-exclusion-banner.visible { display: flex; }
+        .sprint-exclude-toggle-btn { background: none; border: 1px solid currentColor; border-radius: var(--r-sm); color: currentColor; cursor: pointer; padding: 3px 10px; font-size: 0.72rem; font-family: inherit; opacity: 0.8; transition: opacity var(--t); }
+        .sprint-exclude-toggle-btn:hover { opacity: 1; }
+        .issue-card.sprint-excluded { border-color: rgba(217,119,6,0.3); background: rgba(217,119,6,0.04); opacity: 0.85; }
+        .sprint-excluded-badge { display: inline-block; background: rgba(217,119,6,0.10); color: #d97706; border: 1px solid rgba(217,119,6,0.22); border-radius: 20px; font-size: 0.62rem; font-weight: 700; padding: 2px 8px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+        [data-theme="dark"] .sprint-excluded-badge { color: #fbbf24; background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.2); }
 
-        .tab-content {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 0 0 8px 8px;
-            min-height: 200px;
-        }
-
-        .tab-panel {
-            display: none;
-        }
-
-        .tab-panel.active {
-            display: block;
-        }
-
-        /* Transferred Issues Specific Styles */
-        .transferred-input-section {
-            padding: 20px 24px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .issue-ids-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .issue-ids-input:focus {
-            outline: none;
-            border-color: #a50034;
-            box-shadow: 0 0 0 2px rgba(165, 0, 52, 0.08);
-        }
-
-        .transferred-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 12px;
-            align-items: center;
-        }
-
-        .mttr-result {
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
-            border-radius: 6px;
-            padding: 16px;
-            margin-top: 12px;
-            display: none;
-        }
-
-        .mttr-result.visible {
-            display: block;
-        }
-
-        .mttr-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0369a1;
-            margin-bottom: 4px;
-        }
-
-        .mttr-label {
-            font-size: 0.875rem;
-            color: #64748b;
-        }
+        /* ===================================================================
+           DARK MODE â€” INLINE STYLE OVERRIDES
+           =================================================================== */
+        [data-theme="dark"] [style*="color: #374151"]  { color: var(--text-secondary) !important; }
+        [data-theme="dark"] [style*="color: #9ca3af"]  { color: var(--text-faint)     !important; }
+        [data-theme="dark"] [style*="color: #6b7280"]  { color: var(--text-muted)     !important; }
+        [data-theme="dark"] [style*="color: #1a1a2e"]  { color: var(--text-primary)   !important; }
+        [data-theme="dark"] [style*="color: #e65100"]  { color: var(--s-progress)     !important; }
+        [data-theme="dark"] [style*="color: #888"]     { color: var(--text-faint)     !important; }
+        [data-theme="dark"] #sprintFilteredCount       { color: var(--s-progress)     !important; }
     </style>
 </head>
 <body>
@@ -1434,7 +680,8 @@
             </svg>
         </div>
         <span class="lg-topbar-title">Jira Issue Viewer</span>
-        <span class="lg-topbar-subtitle">LG Electronics • Internal Tool</span>
+        <span class="lg-topbar-subtitle">LG Electronics 🤖 Internal Tool</span>
+        <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">&#127769;</button>
     </div>
 
     <div class="container">
@@ -1443,24 +690,25 @@
         <!-- Navigation Tabs -->
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="switchTab('regular-issues', this)">Regular Issues</button>
-            <button class="nav-tab" onclick="switchTab('transferred-issues', this)">Transferred Issues</button>
+            <button class="nav-tab" onclick="switchTab('sprint-issues', this)"> Sprint Issue Track</button>
+        </div>
+
+        <!-- Issue Detail Modal  lives outside tabs so it works from any tab -->
+        <div class="modal-overlay" id="issueModal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Issue Details</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <div class="spinner"></div> Loading issue history...
+                </div>
+            </div>
         </div>
 
         <div class="tab-content">
             <!-- Regular Issues Tab -->
             <div id="regular-issues" class="tab-panel active">
-                <!-- Issue Detail Modal -->
-                <div class="modal-overlay" id="issueModal" onclick="closeModal(event)">
-                    <div class="modal-content" onclick="event.stopPropagation()">
-                        <div class="modal-header">
-                            <h2 id="modalTitle">Issue Details</h2>
-                            <button class="modal-close" onclick="closeModal()">&times;</button>
-                        </div>
-                        <div class="modal-body" id="modalBody">
-                            <div class="spinner"></div> Loading issue history...
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Login Section -->
         <div class="login-section">
@@ -1490,7 +738,7 @@
                     Fetch Issues
                 </button>
                 <button class="btn btn-cancel" id="cancelBtn" onclick="cancelFetch()" style="display: none;">
-                    ✕ Cancel
+                    ✖ Cancel
                 </button>
             </div>
 
@@ -1513,6 +761,7 @@
             <div style="margin-top: 6px; font-size: 0.72rem; color: #9ca3af;">First select a team, then choose one or more members from that team, then fetch.</div>
         </div>
 
+        <div class="tab-inner-pad">
         <!-- Status Messages -->
         <div id="status" class="status"></div>
 
@@ -1585,65 +834,121 @@
 
         <!-- Issues Container -->
         <div id="issuesContainer" class="issues-container"></div>
+        </div><!-- end .tab-inner-pad -->
             </div>
             
-            <!-- Transferred Issues Tab -->
-            <div id="transferred-issues" class="tab-panel">
-                <div class="transferred-input-section">
-                    <h2>Transferred Issues Analysis</h2>
-                    <p style="margin: 8px 0 16px 0; color: #6b7280; font-size: 0.875rem;">
-                        Enter issue IDs (comma-separated) for issues that were transferred or assigned to other developers but your team worked on them.
-                    </p>
-                    
-                    <div class="form-group">
-                        <label>Issue IDs (comma-separated)</label>
-                        <textarea 
-                            id="transferredIssueIds" 
-                            class="issue-ids-input"
-                            placeholder="e.g., PROJ-123, PROJ-456, PROJ-789"
-                        ></textarea>
-                    </div>
-                    
-                    <div class="transferred-actions">
-                        <button class="btn btn-primary" id="fetchTransferredBtn" onclick="fetchTransferredIssues()">
-                            Fetch Transferred Issues
+            <!-- Sprint Issue Track Tab -->
+            <div id="sprint-issues" class="tab-panel">
+
+                <!-- Sprint Issue Detail Modal (reuses issueModal, defined in regular-issues) -->
+
+                <!-- Sprint Config Section -->
+                <div class="sprint-config-section login-section" style="margin-bottom: 0; border-radius: 0; border-left: none; border-right: none; border-top: none;">
+                    <h2>Sprint Issue Track</h2>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2; min-width: 280px;">
+                            <label>Sprint Name</label>
+                            <input type="text" id="sprintName" value="2026_IR2SP07(3/30-4/10)"
+                                placeholder='e.g. 2026_IR2SP07(3/30-4/10)'
+                                style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem;">
+                        </div>
+                        <button class="btn btn-primary" id="fetchSprintBtn" onclick="fetchSprintIssues()">
+                            Fetch Sprint Issues
                         </button>
-                        <button class="btn btn-analyze" id="analyzeTransferredBtn" onclick="analyzeTransferredIssues()" style="display: none;">
-                            Calculate MTTR
-                        </button>
-                        <button class="btn btn-cancel" id="cancelTransferredBtn" onclick="cancelTransferredFetch()" style="display: none;">
-                            ✕ Cancel
+                        <button class="btn btn-cancel" id="cancelSprintBtn" onclick="cancelSprintFetch()" style="display: none;">
+                            ✖ Cancel
                         </button>
                     </div>
-                    
-                    <div id="transferredMttrResult" class="mttr-result">
-                        <div class="mttr-value" id="transferredMttrValue">--</div>
-                        <div class="mttr-label">Mean Time to Resolution (MTTR)</div>
-                        <div style="margin-top: 8px; font-size: 0.75rem; color: #64748b;" id="transferredMttrDetails"></div>
+
+                    <!-- Member Selection - ENACT SETTINGS only, single select -->
+                    <div style="margin-top: 12px;">
+                        <label style="font-weight: 500; color: #374151; font-size: 0.82rem;">
+                            Assignee (ENACT Settings Team) <span style="color: #a50034;">*</span>
+                        </label>
+                        <div id="sprintMemberBar" class="month-filter-bar" style="display: flex; margin-top: 6px; flex-wrap: wrap;">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                    <div style="margin-top: 6px; font-size: 0.72rem; color: #9ca3af;">
+                        Fetches all <strong>project = TVPLAT</strong> tickets for the selected sprint &amp; assignee.
+                        Issues with <strong>IDWOSWBS</strong> or <strong>TVUX</strong> references in description are auto-flagged and can be toggled.
                     </div>
                 </div>
 
-                <!-- Transferred Issues Status Messages -->
-                <div id="transferredStatus" class="status"></div>
+                <!-- Sprint Status Messages -->
+                <div id="sprintStatus" class="status" style="margin: 12px 20px 0 20px;"></div>
 
-                <!-- Transferred Issues Stats Bar -->
-                <div id="transferredStatsBar" class="stats-bar" style="display: none;">
-                    <div class="stat-item">
-                        <div class="stat-value" id="transferredTotalCount">0</div>
-                        <div class="stat-label">Total Issues</div>
+                <div style="padding: 0 20px;">
+                    <!-- Exclusion Banner -->
+                    <div id="sprintExclusionBanner" class="sprint-exclusion-banner">
+                        <span id="sprintExclusionText"></span>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="transferredResolvedCount">0</div>
-                        <div class="stat-label">Resolved</div>
+
+                    <!-- Sprint Stats Bar -->
+                    <div id="sprintStatsBar" class="stats-bar" style="display: none;">
+                        <div class="stat-item">
+                            <div class="stat-value" id="sprintTotalCount">0</div>
+                            <div class="stat-label">Listed Issues</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="sprintOpenCount">0</div>
+                            <div class="stat-label">Open</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="sprintInProgressCount">0</div>
+                            <div class="stat-label">In Progress</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="sprintDoneCount">0</div>
+                            <div class="stat-label">Done/Closed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="sprintFilteredCount" style="color: #d97706;">0</div>
+                            <div class="stat-label">Auto-Filtered</div>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="transferredOpenCount">0</div>
-                        <div class="stat-label">Open/In Progress</div>
+
+                    <!-- Sprint Filters -->
+                    <div id="sprintFiltersSection" class="filters" style="display: none;">
+                        <input type="text" id="sprintSearchFilter" class="filter-input"
+                               placeholder="Search by key, summary, assignee..." oninput="filterSprintIssues()">
                     </div>
+
+                    <!-- Sprint Status Filter -->
+                    <div id="sprintStatusFilterBar" class="month-filter-bar" style="display: none;">
+                        <span class="month-label">Status:</span>
+                    </div>
+
+                    <!-- Sprint Selection Toolbar -->
+                    <div id="sprintSelectionToolbar" class="selection-toolbar">
+                        <div class="selection-info">
+                            <span class="selection-count"><span id="sprintSelectedCount">0</span> issues selected</span>
+                        </div>
+                        <div class="selection-actions">
+                            <button class="btn-clear" onclick="selectAllSprintIssues()">Select All</button>
+                            <button class="btn-clear" onclick="clearSprintSelection()">Clear</button>
+                            <button class="btn-analyze" onclick="analyzeSprintIssues()"> 📊 Analyze / MTTR</button>
+                        </div>
+                    </div>
+
+                    <!-- Sprint Analytics Modal -->
+                    <div class="modal-overlay" id="sprintAnalyticsModal" onclick="closeSprintAnalyticsModal(event)">
+                        <div class="modal-content" style="max-width: 1100px;" onclick="event.stopPropagation()">
+                            <div class="modal-header">
+                                <h2 id="sprintAnalyticsTitle">Sprint MTTR Analytics</h2>
+                                <button class="modal-close" onclick="closeSprintAnalyticsModal()">&times;</button>
+                            </div>
+                            <div class="modal-body" id="sprintAnalyticsBody">
+                                <div style="text-align: center; padding: 40px;">
+                                    <div class="spinner"></div> Analyzing sprint issues...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sprint Issues Container -->
+                    <div id="sprintIssuesContainer" class="issues-container" style="padding-bottom: 20px;"></div>
                 </div>
-
-                <!-- Transferred Issues Container -->
-                <div id="transferredIssuesContainer" class="issues-container"></div>
             </div>
         </div>
     </div>
@@ -1651,11 +956,9 @@
     <script>
         let allIssues = [];
         let filteredIssues = [];
-        let transferredIssues = [];
         let allStatuses = new Set();
         let selectedIssues = new Set();
         let fetchAbortController = null;
-        let transferredFetchAbortController = null;
         let currentPage = 1;
         const ISSUES_PER_PAGE = 10;
         let selectedMonths = new Set(); // empty = all months
@@ -1735,7 +1038,7 @@
 
         function selectAllIssues() {
             if (selectedIssues.size === filteredIssues.length && filteredIssues.length > 0) {
-                // Already all selected → deselect all
+                // Already all selected â†’ deselect all
                 selectedIssues.clear();
             } else {
                 // Select ALL filtered issues (across all pages)
@@ -1781,7 +1084,7 @@
                 
             } catch (error) {
                 console.error('Error analyzing issues:', error);
-                body.innerHTML = `<div style="text-align: center; padding: 40px; color: #a50034;">❌ Error: ${error.message}</div>`;
+                body.innerHTML = `<div style="text-align: center; padding: 40px; color: #a50034;">âŒ Error: ${error.message}</div>`;
             }
         }
 
@@ -2086,7 +1389,7 @@
                     <!-- Monthly MTTR Trend Chart -->
                     ${analytics.monthlyMttr && analytics.monthlyMttr.length > 1 ? `
                     <div class="chart-section">
-                        <h3>📉 MTTR Monthly Trend</h3>
+                        <h3>📊 MTTR Monthly Trend</h3>
                         <p style="font-size: 0.78rem; color: #9ca3af; margin-bottom: 16px;">Average MTTR per month (by resolution date). <span style="color: #059669;">Green</span> = improved, <span style="color: #ef4444;">Red</span> = increased.</p>
                         ${(() => {
                             const data = analytics.monthlyMttr;
@@ -2114,8 +1417,8 @@
                                     }).join('')}
                                 </div>
                                 <div class="trend-legend">
-                                    <div class="trend-legend-item"><div class="trend-legend-dot" style="background:#059669;"></div> Improved (↓)</div>
-                                    <div class="trend-legend-item"><div class="trend-legend-dot" style="background:#ef4444;"></div> Increased (↑)</div>
+                                    <div class="trend-legend-item"><div class="trend-legend-dot" style="background:#059669;"></div> Improved (📉)</div>
+                                    <div class="trend-legend-item"><div class="trend-legend-dot" style="background:#ef4444;"></div> Increased (📈)</div>
                                     <div class="trend-legend-item"><div class="trend-legend-dot" style="background:#a50034;"></div> First month</div>
                                 </div>
                             `;
@@ -2123,7 +1426,7 @@
                     </div>
                     ` : (analytics.monthlyMttr && analytics.monthlyMttr.length === 1 ? `
                     <div class="chart-section">
-                        <h3>📉 MTTR Monthly Trend</h3>
+                        <h3>📊 MTTR Monthly Trend</h3>
                         <p style="font-size: 0.82rem; color: #9ca3af;">Only one month of data (${analytics.monthlyMttr[0].month}): avg MTTR <strong style="color:#a50034;">${analytics.monthlyMttr[0].avgMttr.toFixed(1)} days</strong> across ${analytics.monthlyMttr[0].count} issues. Need 2+ months for trend.</p>
                     </div>
                     ` : '')}
@@ -2771,7 +2074,7 @@
                     ${generatePageNumbers(currentPage, totalPages)}
                     <button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next &rsaquo;</button>
                     <button class="page-btn" onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>Last &raquo;</button>
-                    <span class="page-info">Showing ${startIdx + 1}–${endIdx} of ${issues.length}</span>
+                    <span class="page-info">Showing ${startIdx + 1}â€“${endIdx} of ${issues.length}</span>
                 </div>
             ` : `<div class="page-info" style="text-align: center; margin-top: 15px;">Showing all ${issues.length} issues</div>`;
 
@@ -2901,7 +2204,7 @@
                             date: date,
                             type: 'assigned',
                             title: 'Assignee Changed',
-                            detail: `${item.fromString || 'Unassigned'} → ${item.toString || 'Unassigned'}`,
+                            detail: `${item.fromString || 'Unassigned'} â†’ ${item.toString || 'Unassigned'}`,
                             from: item.fromString,
                             to: item.toString,
                             author: author
@@ -2911,7 +2214,7 @@
                             date: date,
                             type: 'resolved',
                             title: 'Resolution Set',
-                            detail: `${item.fromString || 'None'} → ${item.toString || 'None'}`,
+                            detail: `${item.fromString || 'None'} â†’ ${item.toString || 'None'}`,
                             author: author
                         });
                     }
@@ -3067,119 +2370,270 @@
             `;
         }
 
-        // Keyboard handler for modal
+        // Keyboard handler for modals (issue detail + sprint analytics)
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal();
+                closeSprintAnalyticsModal();
             }
         });
 
-        // Transferred Issues Functions
-        function showTransferredStatus(message, type) {
-            const statusEl = document.getElementById('transferredStatus');
-            statusEl.className = `status ${type}`;
-            statusEl.innerHTML = type === 'loading' 
-                ? `<span class="spinner"></span>${message}` 
+        // ============================================================
+        // SPRINT ISSUE TRACK â€” State & Functions
+        // ============================================================
+        let sprintAllIssues = [];
+        let sprintIncludedIssues = [];   // Fetched referenced issues (non-TVPLAT/IDWOSWBS/TVUX)
+        let sprintExcludedKeys = [];     // IDWOSWBS/TVUX keys found in descriptions but not fetched
+        let sprintFilteredIssues = [];   // After search/status filter
+        let sprintSelectedIssues = new Set();
+        let sprintAllStatuses = new Set();
+        let sprintCurrentPage = 1;
+        const SPRINT_ISSUES_PER_PAGE = 10;
+        let sprintSelectedMember = null;
+        let sprintAbortController = null;
+        let sprintSelectedStatuses = new Set();
+
+        function populateSprintMemberBar(preselect) {
+            const bar = document.getElementById('sprintMemberBar');
+            const members = TEAMS.ENACT_SETTINGS.members;
+            let html = '';
+            members.forEach(member => {
+                const displayName = member.split('.').map(part =>
+                    part.charAt(0).toUpperCase() + part.slice(1)
+                ).join(' ');
+                const isActive = member === preselect;
+                if (isActive) sprintSelectedMember = member;
+                html += `<button class="month-btn${isActive ? ' active' : ''}" data-member="${member}"
+                    onclick="selectSprintMember('${member.replace(/'/g, "\\'")}', this)">${displayName}</button>`;
+            });
+            bar.innerHTML = html;
+        }
+
+        function selectSprintMember(member, btn) {
+            document.querySelectorAll('#sprintMemberBar .month-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            sprintSelectedMember = member;
+        }
+
+        function buildSprintJQL() {
+            if (!sprintSelectedMember) return null;
+            const sprintName = document.getElementById('sprintName').value.trim();
+            if (!sprintName) return null;
+            return `project = TVPLAT AND Sprint = "${sprintName}" AND assignee = ${sprintSelectedMember}`;
+        }
+
+        function showSprintStatus(message, type) {
+            const el = document.getElementById('sprintStatus');
+            el.className = `status ${type}`;
+            el.innerHTML = type === 'loading'
+                ? `<span class="spinner"></span>${message}`
                 : message;
         }
 
-        function hideTransferredStatus() {
-            document.getElementById('transferredStatus').className = 'status';
+        /**
+         * Scan TVPLAT issue descriptions for Jira issue key references (e.g. ITQEVENTA-1482).
+         * Returns includedKeys (all non-TVPLAT/IDWOSWBS/TVUX keys) and
+         * excludedKeys (IDWOSWBS/TVUX keys found but skipped).
+         */
+        function extractIssueKeysFromDescriptions(issues) {
+            const KEY_REGEX = /([A-Z][A-Z0-9]{1,20}-\d+)/g;
+            const SKIP_PROJECTS = new Set(['TVPLAT', 'IDWOSWBS', 'TVUX', 'WEBOS4TV']);
+            const includedKeys = new Set();
+            const excludedKeys = new Set();
+
+            issues.forEach(issue => {
+                const rawDesc = issue.fields?.description || '';
+                // Strip HTML tags from rendered description before scanning
+                const renderedDesc = (issue.renderedFields?.description || '').replace(/<[^>]+>/g, ' ');
+                const combined = rawDesc + ' ' + renderedDesc;
+
+                const matches = combined.match(KEY_REGEX) || [];
+                matches.forEach(key => {
+                    const project = key.split('-')[0];
+                    if (SKIP_PROJECTS.has(project)) {
+                        if (project !== 'TVPLAT') excludedKeys.add(key); // track IDWOSWBS/TVUX
+                    } else {
+                        includedKeys.add(key);
+                    }
+                });
+            });
+
+            return { includedKeys: [...includedKeys], excludedKeys: [...excludedKeys] };
         }
 
-        async function fetchTransferredIssues() {
+        async function fetchSprintIssues() {
             const jiraUrl = document.getElementById('jiraUrl').value.replace(/\/$/, '');
             const token = document.getElementById('token').value.trim();
-            const issueIds = document.getElementById('transferredIssueIds').value.trim();
+            const sprintName = document.getElementById('sprintName').value.trim();
 
             if (!token) {
-                showTransferredStatus('Please enter your Personal Access Token in the Regular Issues tab first', 'error');
+                showSprintStatus('Please enter your Personal Access Token in the Regular Issues tab first.', 'error');
+                return;
+            }
+            if (!sprintName) {
+                showSprintStatus('Please enter a sprint name.', 'error');
+                return;
+            }
+            if (!sprintSelectedMember) {
+                showSprintStatus('Please select a team member.', 'error');
                 return;
             }
 
-            if (!issueIds) {
-                showTransferredStatus('Please enter issue IDs', 'error');
-                return;
-            }
-
-            // Parse issue IDs
-            const ids = issueIds.split(',').map(id => id.trim()).filter(id => id);
-            if (ids.length === 0) {
-                showTransferredStatus('Please enter valid issue IDs', 'error');
-                return;
-            }
-
-            // Create new AbortController for this fetch
-            transferredFetchAbortController = new AbortController();
-
-            const fetchBtn = document.getElementById('fetchTransferredBtn');
-            const cancelBtn = document.getElementById('cancelTransferredBtn');
-            const analyzeBtn = document.getElementById('analyzeTransferredBtn');
-            
+            sprintAbortController = new AbortController();
+            const fetchBtn = document.getElementById('fetchSprintBtn');
+            const cancelBtn = document.getElementById('cancelSprintBtn');
             fetchBtn.disabled = true;
             fetchBtn.textContent = 'Fetching...';
             cancelBtn.style.display = 'inline-block';
-            analyzeBtn.style.display = 'none';
-            
-            showTransferredStatus(`Fetching ${ids.length} transferred issue(s)...`, 'loading');
+
+            sprintSelectedIssues.clear();
+            sprintCurrentPage = 1;
+            document.getElementById('sprintExclusionBanner').classList.remove('visible');
+            document.getElementById('sprintStatsBar').style.display = 'none';
+            document.getElementById('sprintFiltersSection').style.display = 'none';
+            document.getElementById('sprintStatusFilterBar').style.display = 'none';
+            document.getElementById('sprintSelectionToolbar').classList.remove('visible');
+            document.getElementById('sprintIssuesContainer').innerHTML = '';
+
+            const jql = buildSprintJQL();
+            console.log('Sprint JQL:', jql);
 
             try {
-                const fetchedIssues = [];
-                
-                for (const issueId of ids) {
-                    try {
-                        const issue = await fetchSingleIssue(jiraUrl, token, issueId);
-                        if (issue) {
-                            fetchedIssues.push(issue);
-                        }
-                    } catch (error) {
-                        console.warn(`Failed to fetch issue ${issueId}:`, error);
-                        // Continue with other issues
-                    }
-                }
+                // ── Phase 1: Fetch TVPLAT sprint tracking tickets
+                showSprintStatus(`📋 Phase 1/3 — Fetching TVPLAT tracking tickets for <strong>${sprintSelectedMember}</strong>…`, 'loading');
+                const tvplatIssues = await fetchSprintAllIssues(jiraUrl, token, jql);
 
-                if (fetchedIssues.length === 0) {
-                    showTransferredStatus('No issues could be fetched. Please check the issue IDs and your access permissions.', 'error');
+                if (tvplatIssues.length === 0) {
+                    showSprintStatus(`No TVPLAT sprint tickets found for sprint "<em>${escapeHtml(sprintName)}</em>" assigned to <strong>${sprintSelectedMember}</strong>.`, 'error');
                     return;
                 }
 
-                transferredIssues = fetchedIssues;
-                
-                showTransferredStatus(`Successfully fetched ${fetchedIssues.length} out of ${ids.length} issues!`, 'success');
-                
-                // Update stats
-                updateTransferredStats(fetchedIssues);
-                
-                // Display issues
-                displayTransferredIssues(fetchedIssues);
-                
-                // Show analyze button
-                analyzeBtn.style.display = 'inline-block';
+                // ── Phase 2: Extract referenced issue keys from descriptions ──
+                showSprintStatus(`🔍 Phase 2/3 — Scanning ${tvplatIssues.length} TVPLAT ticket description(s) for issue references…`, 'loading');
+                const { includedKeys, excludedKeys } = extractIssueKeysFromDescriptions(tvplatIssues);
+                sprintExcludedKeys = excludedKeys;
 
-                document.getElementById('transferredStatsBar').style.display = 'flex';
+                if (includedKeys.length === 0) {
+                    showSprintStatus(
+                        `Found <strong>${tvplatIssues.length}</strong> TVPLAT ticket(s) but no issue references in their descriptions.` +
+                        (excludedKeys.length > 0 ? ` (${excludedKeys.length} IDWOSWBS/TVUX key(s) were excluded.)` : ''),
+                        'error'
+                    );
+                    return;
+                }
+
+                // â”€â”€ Phase 3: Fetch each referenced issue â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                const fetchedIssues = [];
+                const failedKeys = [];
+
+                for (let i = 0; i < includedKeys.length; i++) {
+                    const key = includedKeys[i];
+                    showSprintStatus(`🔄 Phase 3/3 — Fetching ${i + 1}/${includedKeys.length}: <strong>${key}</strong>…`, 'loading');
+                    try {
+                        const issue = await fetchSprintIssueById(jiraUrl, token, key);
+                        if (issue) fetchedIssues.push(issue);
+                    } catch (err) {
+                        if (err.name === 'AbortError') throw err;
+                        console.warn(`Failed to fetch ${key}:`, err);
+                        failedKeys.push(key);
+                    }
+                }
+
+                sprintAllIssues = fetchedIssues;
+                sprintIncludedIssues = fetchedIssues;
+                sprintFilteredIssues = [...fetchedIssues];
+
+                sprintAllStatuses.clear();
+                fetchedIssues.forEach(i => sprintAllStatuses.add(i.fields?.status?.name || 'Unknown'));
+
+                const failMsg = failedKeys.length > 0 ? ` (${failedKeys.length} key(s) could not be fetched: ${failedKeys.join(', ')})` : '';
+                showSprintStatus(
+                    `✅ Loaded <strong>${fetchedIssues.length}</strong> issue(s) extracted from <strong>${tvplatIssues.length}</strong> TVPLAT tracking ticket(s)` +
+                    (excludedKeys.length > 0 ? ` ⚠️ ${excludedKeys.length} IDWOSWBS/TVUX key(s) excluded` : '') +
+                    failMsg + '.',
+                    'success'
+                );
+
+                if (excludedKeys.length > 0) {
+                    document.getElementById('sprintExclusionText').innerHTML =
+                        `⚠️ <strong>${excludedKeys.length}</strong> IDWOSWBS/TVUX key(s) found in descriptions were excluded: ` +
+                        excludedKeys.map(k => `<code style="background:#fef3c7;padding:1px 5px;border-radius:3px;font-size:0.78rem;">${k}</code>`).join(', ');
+                    document.getElementById('sprintExclusionBanner').classList.add('visible');
+                }
+
+                updateSprintStats(fetchedIssues, excludedKeys.length);
+                populateSprintStatusFilter();
+                displaySprintIssues(sprintFilteredIssues);
+
+                document.getElementById('sprintStatsBar').style.display = 'flex';
+                document.getElementById('sprintFiltersSection').style.display = 'flex';
+                document.getElementById('sprintStatusFilterBar').style.display = 'flex';
+                document.getElementById('sprintSelectionToolbar').classList.add('visible');
 
             } catch (error) {
                 if (error.name === 'AbortError') {
-                    showTransferredStatus('⛔ Fetch cancelled.', 'error');
+                    showSprintStatus('â›” Fetch cancelled.', 'error');
                 } else {
-                    console.error('Error:', error);
-                    showTransferredStatus(`Error: ${error.message}`, 'error');
+                    console.error('Sprint fetch error:', error);
+                    showSprintStatus(`âŒ Error: ${error.message}`, 'error');
                 }
             } finally {
                 fetchBtn.disabled = false;
-                fetchBtn.textContent = 'Fetch Transferred Issues';
+                fetchBtn.textContent = 'Fetch Sprint Issues';
                 cancelBtn.style.display = 'none';
+                sprintAbortController = null;
             }
         }
 
-        async function fetchSingleIssue(jiraUrl, token, issueId) {
-            // Construct the Jira API URL for single issue - same pattern as regular issues
+        function cancelSprintFetch() {
+            if (sprintAbortController) {
+                sprintAbortController.abort();
+                sprintAbortController = null;
+            }
+        }
+
+        async function fetchSprintAllIssues(jiraUrl, token, jql) {
+            let issues = [];
+            let startAt = 0;
+            const maxResults = 50;
+            let total = 0;
+
+            do {
+                const jiraApiUrl = `${jiraUrl}/rest/api/2/search?jql=${encodeURIComponent(jql)}&startAt=${startAt}&maxResults=${maxResults}&expand=names,renderedFields`;
+                const url = `${getProxyBase()}/api/jira-proxy?url=${encodeURIComponent(jiraApiUrl)}`;
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    signal: sprintAbortController?.signal
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) throw new Error('Authentication failed. Check your PAT.');
+                    if (response.status === 403) throw new Error('Access forbidden. Check project permissions.');
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+
+                const data = await response.json();
+                issues = issues.concat(data.issues);
+                total = data.total;
+                startAt += maxResults;
+                showSprintStatus(`Fetching sprint issues... ${issues.length} of ${total}`, 'loading');
+
+            } while (startAt < total);
+
+            return issues;
+        }
+
+        async function fetchSprintIssueById(jiraUrl, token, issueId) {
             const jiraApiUrl = `${jiraUrl}/rest/api/2/issue/${issueId}?expand=names,renderedFields`;
-            
-            // Use the same proxy endpoint as regular issues
-            const proxyBase = getProxyBase();
-            const url = `${proxyBase}/api/jira-proxy?url=${encodeURIComponent(jiraApiUrl)}`;
-            
+            const url = `${getProxyBase()}/api/jira-proxy?url=${encodeURIComponent(jiraApiUrl)}`;
+
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -3187,167 +2641,451 @@
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                signal: transferredFetchAbortController?.signal
+                signal: sprintAbortController?.signal
             });
-            
+
             if (!response.ok) {
-                if (response.status === 401) {
-                    throw new Error('Authentication failed. Check your Personal Access Token.');
-                } else if (response.status === 403) {
-                    throw new Error('Access forbidden. You may not have permission to access this issue.');
-                } else if (response.status === 404) {
-                    throw new Error(`Issue ${issueId} not found. Check the issue ID.`);
-                } else {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
-                }
+                const errorText = await response.text();
+                throw new Error(`HTTP ${response.status} for ${issueId}: ${errorText}`);
             }
-            
-            const data = await response.json();
-            return data;
+            return response.json();
         }
 
-        function cancelTransferredFetch() {
-            if (transferredFetchAbortController) {
-                transferredFetchAbortController.abort();
-                transferredFetchAbortController = null;
+        function updateSprintStats(issues, excludedCount) {
+            let open = 0, inProgress = 0, done = 0;
+            issues.forEach(issue => {
+                const status = (issue.fields?.status?.name || '').toLowerCase();
+                if (status.includes('done') || status.includes('closed') || status.includes('resolved')) done++;
+                else if (status.includes('progress')) inProgress++;
+                else open++;
+            });
+            document.getElementById('sprintTotalCount').textContent = issues.length;
+            document.getElementById('sprintOpenCount').textContent = open;
+            document.getElementById('sprintInProgressCount').textContent = inProgress;
+            document.getElementById('sprintDoneCount').textContent = done;
+            document.getElementById('sprintFilteredCount').textContent = excludedCount || 0;
+        }
+
+        function populateSprintStatusFilter() {
+            const bar = document.getElementById('sprintStatusFilterBar');
+            const statusSet = new Set();
+            sprintIncludedIssues.forEach(i => statusSet.add(i.fields?.status?.name || 'Unknown'));
+            const sorted = Array.from(statusSet).sort();
+            sprintSelectedStatuses.clear();
+            let html = '<span class="month-label">Status:</span>';
+            html += `<button class="month-btn all-btn active" onclick="toggleAllSprintStatuses(this)">All</button>`;
+            sorted.forEach(status => {
+                html += `<button class="month-btn" data-status="${status}"
+                    onclick="toggleSprintStatus('${status.replace(/'/g, "\\'")}', this)">${status}</button>`;
+            });
+            bar.innerHTML = html;
+            bar.style.display = 'flex';
+        }
+
+        function toggleSprintStatus(status, btn) {
+            const allBtn = document.querySelector('#sprintStatusFilterBar .month-btn.all-btn');
+            allBtn.classList.remove('active');
+            if (sprintSelectedStatuses.has(status)) {
+                sprintSelectedStatuses.delete(status);
+                btn.classList.remove('active');
+            } else {
+                sprintSelectedStatuses.add(status);
+                btn.classList.add('active');
             }
+            if (sprintSelectedStatuses.size === 0) allBtn.classList.add('active');
+            filterSprintIssues();
         }
 
-        function updateTransferredStats(issues) {
-            const total = issues.length;
-            const resolved = issues.filter(issue => 
-                ['Done', 'Closed', 'Resolved', 'Fixed'].includes(issue.fields?.status?.name)
-            ).length;
-            const open = total - resolved;
-
-            document.getElementById('transferredTotalCount').textContent = total;
-            document.getElementById('transferredResolvedCount').textContent = resolved;
-            document.getElementById('transferredOpenCount').textContent = open;
+        function toggleAllSprintStatuses(btn) {
+            sprintSelectedStatuses.clear();
+            document.querySelectorAll('#sprintStatusFilterBar .month-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterSprintIssues();
         }
 
-        function displayTransferredIssues(issues) {
-            const container = document.getElementById('transferredIssuesContainer');
-            
+        function filterSprintIssues() {
+            const searchTerm = document.getElementById('sprintSearchFilter').value.toLowerCase();
+
+            sprintFilteredIssues = sprintIncludedIssues.filter(issue => {
+                const matchesSearch = !searchTerm ||
+                    issue.key.toLowerCase().includes(searchTerm) ||
+                    (issue.fields?.summary || '').toLowerCase().includes(searchTerm) ||
+                    (issue.fields?.assignee?.displayName || '').toLowerCase().includes(searchTerm) ||
+                    (issue.fields?.reporter?.displayName || '').toLowerCase().includes(searchTerm);
+
+                const matchesStatus = sprintSelectedStatuses.size === 0 ||
+                    sprintSelectedStatuses.has(issue.fields?.status?.name);
+
+                return matchesSearch && matchesStatus;
+            });
+
+            sprintCurrentPage = 1;
+            displaySprintIssuesPage();
+        }
+
+        function displaySprintIssues(issues) {
+            sprintFilteredIssues = issues;
+            sprintCurrentPage = 1;
+            displaySprintIssuesPage();
+        }
+
+        function displaySprintIssuesPage() {
+            const container = document.getElementById('sprintIssuesContainer');
+            const jiraUrl = document.getElementById('jiraUrl').value.replace(/\/$/, '');
+            const issues = sprintFilteredIssues;
+
             if (issues.length === 0) {
-                container.innerHTML = '<div class="no-issues">No transferred issues to display</div>';
+                container.innerHTML = '<div class="issue-card"><p style="text-align: center; color: #888; padding: 20px 0;">No sprint issues found matching current filters.</p></div>';
                 return;
             }
 
-            const issuesHtml = issues.map(issue => {
-                const status = issue.fields?.status?.name || 'Unknown';
-                const priority = issue.fields?.priority?.name || 'None';
-                const assignee = issue.fields?.assignee?.displayName || 'Unassigned';
-                const reporter = issue.fields?.reporter?.displayName || 'Unknown';
-                const created = issue.fields?.created ? new Date(issue.fields.created).toLocaleDateString() : 'Unknown';
-                const updated = issue.fields?.updated ? new Date(issue.fields.updated).toLocaleDateString() : 'Unknown';
-                const dueDate = issue.fields?.duedate ? new Date(issue.fields.duedate).toLocaleDateString() : 'No due date';
-                
+            const totalPages = Math.ceil(issues.length / SPRINT_ISSUES_PER_PAGE);
+            const startIdx = (sprintCurrentPage - 1) * SPRINT_ISSUES_PER_PAGE;
+            const endIdx = Math.min(startIdx + SPRINT_ISSUES_PER_PAGE, issues.length);
+            const pageIssues = issues.slice(startIdx, endIdx);
+
+            const cardsHtml = pageIssues.map(issue => {
+                const fields = issue.fields;
+                const statusName = fields.status?.name || 'Unknown';
+                const statusClass = getStatusClass(statusName);
+
+                const primaryFields = [
+                    { key: 'issuetype', label: 'Issue Type' },
+                    { key: 'priority', label: 'Priority' },
+                    { key: 'assignee', label: 'Assignee' },
+                    { key: 'reporter', label: 'Reporter' },
+                    { key: 'created', label: 'Created' },
+                    { key: 'updated', label: 'Updated' },
+                    { key: 'duedate', label: 'Due Date' },
+                    { key: 'resolution', label: 'Resolution' },
+                    { key: 'resolutiondate', label: 'Resolution Date' },
+                    { key: 'components', label: 'Components' },
+                    { key: 'labels', label: 'Labels' }
+                ];
+
+                const primaryFieldsHtml = primaryFields.map(f => {
+                    const value = fields[f.key];
+                    return `
+                        <div class="field-item">
+                            <div class="field-label">${f.label}</div>
+                            <div class="field-value">${formatFieldValue(value, f.key)}</div>
+                        </div>`;
+                }).join('');
+
+                // Description â€” prefer rendered HTML (from expand=renderedFields), fall back to raw text
+                const rawDesc = fields.description;
+                const renderedDesc = issue.renderedFields?.description;
+                const descContent = renderedDesc || (rawDesc ? escapeHtml(rawDesc) : null);
+                const descriptionHtml = descContent
+                    ? `<div class="field-item full-width" style="margin-top: 10px;">
+                           <div class="field-label">Description</div>
+                           <div class="field-value description" style="max-height:200px;overflow-y:auto;font-size:0.85rem;line-height:1.6;">${descContent}</div>
+                       </div>`
+                    : '';
+
                 return `
-                    <div class="issue-card">
+                    <div class="issue-card clickable-card ${sprintSelectedIssues.has(issue.key) ? 'selected' : ''}"
+                         data-key="${issue.key}" onclick="openSprintIssueModal('${issue.key}')">
+                        <input type="checkbox" class="issue-checkbox sprint-checkbox" data-key="${issue.key}"
+                               ${sprintSelectedIssues.has(issue.key) ? 'checked' : ''}
+                               onclick="toggleSprintIssueSelection('${issue.key}', this)">
                         <div class="issue-header">
-                            <div class="issue-key">
-                                <a href="${issue.self?.replace('/rest/api/2/issue/' + issue.key, '/browse/' + issue.key) || '#'}" 
-                                   target="_blank" rel="noopener">${issue.key}</a>
-                            </div>
-                            <div class="status-badge status-${status.replace(/\s+/g, '-').toLowerCase()}">${status}</div>
+                            <span class="issue-key">
+                                <a href="${jiraUrl}/browse/${issue.key}" target="_blank" onclick="event.stopPropagation()">${issue.key}</a>
+                            </span>
+                            <span class="issue-status ${statusClass}">${statusName}</span>
                         </div>
-                        <div class="issue-summary">${issue.fields?.summary || 'No summary'}</div>
-                        <div class="issue-details">
-                            <div class="field-item">
-                                <span class="field-label">Priority:</span>
-                                <span class="field-value">${priority}</span>
-                            </div>
-                            <div class="field-item">
-                                <span class="field-label">Assignee:</span>
-                                <span class="field-value">${assignee}</span>
-                            </div>
-                            <div class="field-item">
-                                <span class="field-label">Reporter:</span>
-                                <span class="field-value">${reporter}</span>
-                            </div>
-                            <div class="field-item">
-                                <span class="field-label">Created:</span>
-                                <span class="field-value">${created}</span>
-                            </div>
-                            <div class="field-item">
-                                <span class="field-label">Updated:</span>
-                                <span class="field-value">${updated}</span>
-                            </div>
-                            <div class="field-item">
-                                <span class="field-label">Due Date:</span>
-                                <span class="field-value">${dueDate}</span>
-                            </div>
+                        <div class="issue-summary">${escapeHtml(fields.summary || 'No summary')}</div>
+                        <div class="issue-fields">
+                            ${primaryFieldsHtml}
+                            ${descriptionHtml}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
 
-            container.innerHTML = `
-                <div class="issues-list">
-                    <h3 style="margin-bottom: 16px; color: #1a1a2e;">Transferred Issues (${issues.length})</h3>
-                    ${issuesHtml}
+            const paginationHtml = totalPages > 1 ? `
+                <div class="pagination">
+                    <button class="page-btn" onclick="goToSprintPage(1)" ${sprintCurrentPage === 1 ? 'disabled' : ''}>&laquo; First</button>
+                    <button class="page-btn" onclick="goToSprintPage(${sprintCurrentPage - 1})" ${sprintCurrentPage === 1 ? 'disabled' : ''}>&lsaquo; Prev</button>
+                    ${generateSprintPageNumbers(sprintCurrentPage, totalPages)}
+                    <button class="page-btn" onclick="goToSprintPage(${sprintCurrentPage + 1})" ${sprintCurrentPage === totalPages ? 'disabled' : ''}>Next &rsaquo;</button>
+                    <button class="page-btn" onclick="goToSprintPage(${totalPages})" ${sprintCurrentPage === totalPages ? 'disabled' : ''}>Last &raquo;</button>
+                    <span class="page-info">Showing ${startIdx + 1}â€“${endIdx} of ${issues.length}</span>
+                </div>
+            ` : `<div class="page-info" style="text-align: center; margin-top: 15px; color: #9ca3af;">Showing all ${issues.length} issues</div>`;
+
+            container.innerHTML = cardsHtml + paginationHtml;
+        }
+
+        function generateSprintPageNumbers(current, total) {
+            let pages = [];
+            const start = Math.max(1, current - 2);
+            const end = Math.min(total, current + 2);
+            if (start > 1) pages.push('<span class="page-dots">...</span>');
+            for (let i = start; i <= end; i++) {
+                pages.push(`<button class="page-btn ${i === current ? 'active' : ''}" onclick="goToSprintPage(${i})">${i}</button>`);
+            }
+            if (end < total) pages.push('<span class="page-dots">...</span>');
+            return pages.join('');
+        }
+
+        function goToSprintPage(page) {
+            const totalPages = Math.ceil(sprintFilteredIssues.length / SPRINT_ISSUES_PER_PAGE);
+            if (page < 1 || page > totalPages) return;
+            sprintCurrentPage = page;
+            displaySprintIssuesPage();
+            document.getElementById('sprintIssuesContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function toggleSprintIssueSelection(issueKey, checkbox) {
+            event.stopPropagation();
+            if (checkbox.checked) {
+                sprintSelectedIssues.add(issueKey);
+            } else {
+                sprintSelectedIssues.delete(issueKey);
+            }
+            updateSprintSelectionUI();
+        }
+
+        function updateSprintSelectionUI() {
+            document.getElementById('sprintSelectedCount').textContent = sprintSelectedIssues.size;
+            document.querySelectorAll('#sprintIssuesContainer .issue-card').forEach(card => {
+                const key = card.dataset.key;
+                card.classList.toggle('selected', sprintSelectedIssues.has(key));
+            });
+        }
+
+        function selectAllSprintIssues() {
+            if (sprintSelectedIssues.size === sprintFilteredIssues.length && sprintFilteredIssues.length > 0) {
+                sprintSelectedIssues.clear();
+            } else {
+                sprintFilteredIssues.forEach(issue => sprintSelectedIssues.add(issue.key));
+            }
+            displaySprintIssuesPage();
+            updateSprintSelectionUI();
+        }
+
+        function clearSprintSelection() {
+            sprintSelectedIssues.clear();
+            document.querySelectorAll('.sprint-checkbox').forEach(cb => cb.checked = false);
+            updateSprintSelectionUI();
+        }
+
+        // Sprint Issue Detail Modal â€” reuses the shared issueModal (position:fixed, works across tabs)
+        function openSprintIssueModal(issueKey) {
+            const modal = document.getElementById('issueModal');
+            document.getElementById('modalTitle').textContent = `${issueKey} — Timeline & Analytics`;
+            document.getElementById('modalBody').innerHTML =
+                '<div style="text-align: center; padding: 40px;"><div class="spinner"></div> Loading issue history...</div>';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            fetchIssueHistory(issueKey);
+        }
+
+        // Sprint MTTR Analytics
+        async function analyzeSprintIssues() {
+            if (sprintSelectedIssues.size === 0) {
+                alert('Please select at least one sprint issue to analyze.');
+                return;
+            }
+
+            const modal = document.getElementById('sprintAnalyticsModal');
+            const body = document.getElementById('sprintAnalyticsBody');
+            const sprintName = document.getElementById('sprintName').value.trim();
+
+            document.getElementById('sprintAnalyticsTitle').textContent =
+                `Sprint MTTR Analytics — ${sprintName}`;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            body.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="spinner"></div> Fetching changelog for MTTR analysis…</div>';
+            try {
+                const issueKeys = Array.from(sprintSelectedIssues);
+                // Reuse fetchIssueWithChangelog (reads jiraUrl + token from regular-issues fields)
+                const issueData = await Promise.all(issueKeys.map(key => fetchIssueWithChangelog(key)));
+                const analytics = calculateAnalytics(issueData, sprintSelectedMember);
+                renderSprintAnalyticsDashboard(analytics, sprintSelectedMember, sprintName);
+            } catch (error) {
+                console.error('Sprint analytics error:', error);
+                body.innerHTML = `<div style="text-align: center; padding: 40px; color: #a50034;">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        function renderSprintAnalyticsDashboard(analytics, assignee, sprintName) {
+            const body = document.getElementById('sprintAnalyticsBody');
+            const maxMttrDays = Math.max(...analytics.issueBreakdown.filter(i => i.mttrDays !== null).map(i => i.mttrDays), 1);
+            const maxResolutionDays = Math.max(...analytics.issueBreakdown.filter(i => i.resolutionDays).map(i => i.resolutionDays), 1);
+
+            const mttrRows = analytics.issueBreakdown.filter(i => i.mttrDays !== null);
+            const unresolvedCount = analytics.issueBreakdown.filter(i => i.resolutionDays === null).length;
+
+            body.innerHTML = `
+                <div class="analytics-dashboard">
+                    <div class="analytics-header">
+                        <h2>Sprint MTTR Analytics</h2>
+                        <p>Sprint: <strong>${escapeHtml(sprintName)}</strong> &nbsp;•&nbsp;
+                           ${analytics.totalIssues} issues analyzed
+                           ${assignee ? ` &nbsp;•&nbsp; Assignee: <strong>${assignee}</strong>` : ''}
+                        </p>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="value">${analytics.totalIssues}</div>
+                            <div class="label">Total Analyzed</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="value">${analytics.resolvedIssues}</div>
+                            <div class="label">Resolved</div>
+                            <div class="sub-value">${((analytics.resolvedIssues / analytics.totalIssues) * 100).toFixed(1)}% resolution rate</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="value">${analytics.avgResolutionDays.toFixed(1)}</div>
+                            <div class="label">Avg Biz Days to Resolve</div>
+                            <div class="sub-value">Total: ${analytics.totalResolutionDays.toFixed(1)} biz days</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="value">${analytics.mttrCount > 0 ? analytics.avgMttrDays.toFixed(1) : '—'}</div>
+                            <div class="label">Avg MTTR (Assigned → Resolved)</div>
+                            <div class="sub-value">${analytics.mttrCount} resolved &nbsp;•&nbsp; ${analytics.totalMttrDays.toFixed(1)} total biz days</div>
+                        </div>
+                    </div>
+
+                    <!-- MTTR per Issue Chart -->
+                    ${mttrRows.length > 0 ? `
+                    <div class="chart-section">
+                        <h3>📊 MTTR per Issue (active time assigned to ${escapeHtml(assignee || 'assignee')}, excl. weekends)</h3>
+                        <div class="bar-chart">
+                            ${mttrRows.slice(0, 20).map(issue => `
+                                <div class="bar-row">
+                                    <div class="bar-label" title="${escapeHtml(issue.summary)}">
+                                        <a href="http://jira.lge.com/issue/browse/${issue.key}" target="_blank"
+                                           style="color: #6b7280; text-decoration: none;">${issue.key}</a>
+                                    </div>
+                                    <div class="bar-wrapper">
+                                        <div class="bar-fill holding" style="width: ${Math.max((issue.mttrDays / maxMttrDays) * 100, 2)}%;">
+                                            ${issue.mttrDays.toFixed(1)}d
+                                        </div>
+                                    </div>
+                                    <div class="bar-value">${issue.mttrDays.toFixed(1)} days</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${mttrRows.length > 20 ? `<p style="color:#888;margin-top:12px;text-align:center;">Showing top 20 of ${mttrRows.length} resolved issues</p>` : ''}
+                    </div>
+                    ` : '<div class="chart-section"><h3>📊 MTTR per Issue</h3><p style="color:#9ca3af;">No resolved issues with MTTR data yet.</p></div>'}
+
+                    <!-- Resolution Time Chart -->
+                    ${analytics.issueBreakdown.filter(i => i.resolutionDays !== null).length > 0 ? `
+                    <div class="chart-section">
+                        <h3>📊 Resolution Time per Issue (created → resolved, excl. weekends)</h3>
+                        <div class="bar-chart">
+                            ${analytics.issueBreakdown
+                                .filter(i => i.resolutionDays !== null)
+                                .sort((a, b) => b.resolutionDays - a.resolutionDays)
+                                .slice(0, 15)
+                                .map(issue => `
+                                <div class="bar-row">
+                                    <div class="bar-label" title="${escapeHtml(issue.summary)}">
+                                        <a href="http://jira.lge.com/issue/browse/${issue.key}" target="_blank"
+                                           style="color: #6b7280; text-decoration: none;">${issue.key}</a>
+                                    </div>
+                                    <div class="bar-wrapper">
+                                        <div class="bar-fill resolution" style="width: ${Math.max((issue.resolutionDays / maxResolutionDays) * 100, 2)}%;">
+                                            ${issue.resolutionDays.toFixed(1)}d
+                                        </div>
+                                    </div>
+                                    <div class="bar-value">${issue.resolutionDays.toFixed(1)} days</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${unresolvedCount > 0 ? `<p style="color:#e65100;margin-top:12px;">${unresolvedCount} issue(s) not yet resolved.</p>` : ''}
+                    </div>
+                    ` : ''}
+
+                    <!-- Detailed Breakdown Table -->
+                    <div class="chart-section">
+                        <h3>📋 Detailed Issue Breakdown</h3>
+                        <div style="overflow-x: auto;">
+                            <table class="breakdown-table">
+                                <thead>
+                                    <tr>
+                                        <th>Issue</th>
+                                        <th>Status</th>
+                                        <th>MTTR (Biz Days)</th>
+                                        <th>Resolution (Biz Days)</th>
+                                        <th>Assignee</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${analytics.issueBreakdown.map(issue => `
+                                        <tr>
+                                            <td>
+                                                <strong>
+                                                    <a href="http://jira.lge.com/issue/browse/${issue.key}" target="_blank"
+                                                       style="color: #a50034; text-decoration: none;">${issue.key}</a>
+                                                </strong>
+                                                <div style="font-size: 0.8rem; color: #9ca3af; max-width: 320px;
+                                                            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                    ${escapeHtml(issue.summary)}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="issue-status ${getStatusClass(issue.status)}"
+                                                      style="font-size: 0.72rem;">${issue.status || '—'}</span>
+                                            </td>
+                                            <td>
+                                                ${issue.mttrDays !== null
+                                                    ? `${issue.mttrDays.toFixed(1)} days
+                                                       <div class="mini-bar">
+                                                         <div class="mini-bar-fill" style="width:${(issue.mttrDays / maxMttrDays) * 100}%;"></div>
+                                                       </div>`
+                                                    : '<span style="color:#888;">—</span>'}
+                                            </td>
+                                            <td>${issue.resolutionDays !== null
+                                                ? issue.resolutionDays.toFixed(1) + ' days'
+                                                : '<span style="color:#e65100;">Open</span>'}</td>
+                                            <td>${issue.currentAssignee}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             `;
         }
 
-        function analyzeTransferredIssues() {
-            if (transferredIssues.length === 0) {
-                showTransferredStatus('No transferred issues to analyze', 'error');
-                return;
-            }
+        function closeSprintAnalyticsModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('sprintAnalyticsModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-            // Calculate MTTR for resolved issues
-            const resolvedIssues = transferredIssues.filter(issue => 
-                ['Done', 'Closed', 'Resolved', 'Fixed'].includes(issue.fields?.status?.name)
-            );
+        // ============================================================
 
-            if (resolvedIssues.length === 0) {
-                showTransferredStatus('No resolved issues found. MTTR can only be calculated for resolved issues.', 'error');
-                return;
-            }
-
-            let totalResolutionTime = 0;
-            let validIssues = 0;
-
-            resolvedIssues.forEach(issue => {
-                const created = issue.fields?.created;
-                const resolutionDate = issue.fields?.resolutiondate || issue.fields?.updated;
-                
-                if (created && resolutionDate) {
-                    const createdTime = new Date(created);
-                    const resolvedTime = new Date(resolutionDate);
-                    const resolutionTimeMs = resolvedTime - createdTime;
-                    
-                    if (resolutionTimeMs > 0) {
-                        totalResolutionTime += resolutionTimeMs;
-                        validIssues++;
-                    }
-                }
-            });
-
-            if (validIssues === 0) {
-                showTransferredStatus('Could not calculate MTTR: no valid resolution dates found', 'error');
-                return;
-            }
-
-            const avgResolutionTimeMs = totalResolutionTime / validIssues;
-            const avgResolutionDays = avgResolutionTimeMs / (1000 * 60 * 60 * 24);
-            
-            // Display MTTR result
-            const mttrValueEl = document.getElementById('transferredMttrValue');
-            const mttrDetailsEl = document.getElementById('transferredMttrDetails');
-            const mttrResultEl = document.getElementById('transferredMttrResult');
-
-            mttrValueEl.textContent = `${avgResolutionDays.toFixed(1)} days`;
-            mttrDetailsEl.textContent = `Based on ${validIssues} resolved issue(s) out of ${transferredIssues.length} total`;
-            mttrResultEl.classList.add('visible');
-
-            showTransferredStatus('MTTR calculation completed!', 'success');
+        // ============================================================
+        // THEME TOGGLE
+        // ============================================================
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('jira-viewer-theme', newTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) btn.innerHTML = newTheme === 'dark' ? '&#9728;' : '&#127769;';
         }
 
         // Check for saved credentials on load
         document.addEventListener('DOMContentLoaded', () => {
+            // Restore saved theme
+            const savedTheme = localStorage.getItem('jira-viewer-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const btn = document.getElementById('themeToggle');
+            if (btn) btn.innerHTML = savedTheme === 'dark' ? '&#9728;' : '&#127769;';
+
             // Initialize team members for default team
             populateTeamMembers();
             
@@ -3356,6 +3094,9 @@
             if (!tokenField.value) {
                 tokenField.focus();
             }
+
+            // Initialize sprint member bar with manish.ranjan pre-selected
+            populateSprintMemberBar('manish.ranjan');
         });
     </script>
 </body>
